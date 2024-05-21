@@ -37,5 +37,7 @@ class Climate:
             return True
         return False
 
-    def get_state(self):
+    @staticmethod
+    def get_state(args):
+        print(args)
         return STATE
