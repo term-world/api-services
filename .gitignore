@@ -324,3 +324,6 @@ cython_debug/
 
 # Apple folder attributes file
 .DS_Store
+
+# Virtual environment
+venv
