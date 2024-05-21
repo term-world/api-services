@@ -326,4 +326,4 @@ cython_debug/
 .DS_Store
 
 # Virtual environment
-venv
+*venv*
