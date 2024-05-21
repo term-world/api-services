@@ -36,3 +36,6 @@ class Climate:
         if STATE["wind"]["speed"] > 5:
             return True
         return False
+
+    def get_state(self):
+        return STATE

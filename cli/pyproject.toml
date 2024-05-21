@@ -1,6 +1,6 @@
 [build-system]
 requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
+build-backend = "setuptools.build_meta:__legacy__"
 
 [project]
 name = "world-codespaces-api-client"
@@ -8,6 +8,7 @@ version = "0.1.0"
 dependencies = [
     "arglite",
     "pennant",
+    "python-dotenv",
     "requests",
     "rich"
 ]
@@ -17,3 +18,4 @@ description = "Client-sided API interaction installed to Codespaces container."
 
 [project.scripts]
 inventory = "inventory:main.main"
+climate = "climate:main.main"

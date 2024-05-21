@@ -1,13 +1,18 @@
 [build-system]
 requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
+build-backend = "setuptools.build_meta:__legacy__"
 
 [project]
 name = "world-codespaces-api-services"
 version = "0.1.0"
 dependencies = [
-    "pennant"
+    "pennant",
+    "django",
+    "django_rest_framework"
 ]
 
 readme = "README.md"
 description = "Server-sided API interaction installed to Codespaces container."
+
+[project.scripts]
+serve = "api:manage.main"
