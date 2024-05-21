@@ -38,7 +38,6 @@ class Climate:
             return True
         return False
 
-    @staticmethod
-    def get_state(args):
+    def get_state(self, *args):
         print(args)
         return JsonResponse(STATE, status = 200)
