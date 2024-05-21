@@ -4,6 +4,8 @@ import requests
 from datetime import datetime
 from django.http import JsonResponse
 
+from django.core.handlers.wsgi import WSGIRequest
+
 STATE = json.loads(
     requests.get(
         "https://cdn.githubraw.com/term-world/TNN/main/weather.json"
@@ -38,6 +40,12 @@ class Climate:
             return True
         return False
 
-    def get_state(self, *args):
-        print(args)
-        return JsonResponse(STATE, status = 200)
+    def call(self, request: WSGIRequest)-> JsonResponse:
+        response = {
+            "wind": {
+                "windy": self.windy,
+                "windspeed": self.wind_speed
+            },
+            "sun": self.sunny
+        }
+        return JsonResponse(response, status = 200)

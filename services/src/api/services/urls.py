@@ -9,5 +9,5 @@ import climate_api
 climate = climate_api.Climate()
 
 urlpatterns = [
-    path('api/v1/climate', climate.get_state),
+    path('api/v1/climate', climate.call),
 ]

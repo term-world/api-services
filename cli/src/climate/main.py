@@ -1,5 +1,7 @@
 import os
 import requests
+import arglite
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,4 +12,4 @@ def main():
     state = requests.get(
         f"{api_url}:{api_port}/services/api/v1/climate"
     )
-    print(state.contents)
+    print(state.content)
