@@ -2,6 +2,7 @@ import json
 import requests
 
 from datetime import datetime
+from django.http import JsonResponse
 
 STATE = json.loads(
     requests.get(
@@ -40,4 +41,4 @@ class Climate:
     @staticmethod
     def get_state(args):
         print(args)
-        return STATE
+        return JsonResponse(STATE, status = 200)
