@@ -1,10 +1,7 @@
 from django.http import JsonResponse
+from .models import Inventory, Item
 from django.views.decorators.csrf import csrf_exempt
 import json
-
-# Import Inventory and Item from term-util/libs
-from inventory.Inventory import Inventory
-from inventory.Item import Item
 
 @csrf_exempt
 def inventory_view(request):
