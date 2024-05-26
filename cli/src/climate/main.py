@@ -1,23 +1,23 @@
-"""Provide weather report on local climate."""
+"""Provide a weather report on local climate."""
 
 import os
 import requests
-import arglite
 import json
 from rich.console import Console
 from rich.table import Table
 
-# Import and call the load_dotenv function from the dotenv module (loads environment variables from a .env file), 
-from dotenv import load_dotenv
-load_dotenv()
+# Import and call the load_dotenv function from the dotenv module (loads environment variables from a .env file)
+# from dotenv import load_dotenv
+# load_dotenv()
 
 def main():
     """Display the weather report."""
-    # define api_url and port variables
-    api_url = os.getenv("API_URL")
-    api_port = os.getenv("PORT")
+    # Define api_url and port variables
+    # api_url = os.getenv("API_URL")
+    # api_port = os.getenv("PORT")
 
-    # send a get request to the API and store the response
+    # Sends a get request to the TNN url and stores the response
+    # state = requests.get(f"{api_url}:{api_port}/services/api/v1/climate")
     STATE = json.loads(
     requests.get(
         "https://cdn.githubraw.com/term-world/TNN/main/weather.json"
