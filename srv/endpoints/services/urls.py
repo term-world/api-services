@@ -23,7 +23,7 @@ for entry in os.listdir(route_path):
                 instance = cls()
                 urlpatterns.append(
                     path(
-                        f"{elem.version}/{elem.__name__}",
+                        f"{elem.version}/{elem.endpoint}/{elem.__name__}",
                         getattr(instance, elem.__name__)
                     )
                 )
