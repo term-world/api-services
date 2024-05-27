@@ -4,17 +4,22 @@ import requests
 from ..Router import Route
 
 from datetime import datetime
+from dotenv import load_dotenv
 from django.http import JsonResponse
-
 from django.core.handlers.wsgi import WSGIRequest
 
 try:
-    STATE = json.loads(
-        requests.get(
-            "https://cdn.githubraw.com/term-world/TNN/main/weather.json"
-        ).text
+    # Retrieve environment variables from .env file
+    lat = os.getenv("LAT")
+    lon = os.getenv("LON")
+    api = os.getenv("OPENWEATHER_API")
+    # Make request to OpenWeather API
+    data = requests.get(
+        f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api}"
     )
+    STATE = json.loads(data.content)
 except Exception as err:
+    print(err)
     STATE = {}
 
 class Climate(Route):
@@ -61,7 +66,7 @@ class Climate(Route):
         return False
 
     @Route.endpoint("v1")
-    def climate(self, request: WSGIRequest)-> JsonResponse:
+    def conditions(self, request: WSGIRequest) -> JsonResponse:
         response = {
             "wind": {
                 "windy": self.windy,
@@ -70,3 +75,8 @@ class Climate(Route):
             "sun": self.sunny
         }
         return JsonResponse(response, status = 200)
+
+    @Route.endpoint("v1")
+    def all(self, request: WSGIRequest) -> JsonResponse:
+        print(STATE)
+        return JsonResponse(STATE, status = 200)
