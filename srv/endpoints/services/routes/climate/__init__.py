@@ -1,3 +1,4 @@
+import os
 import json
 import requests
 
@@ -8,12 +9,15 @@ from dotenv import load_dotenv
 from django.http import JsonResponse
 from django.core.handlers.wsgi import WSGIRequest
 
+load_dotenv()
+
 try:
     # Retrieve environment variables from .env file
     lat = os.getenv("LAT")
     lon = os.getenv("LON")
     api = os.getenv("OPENWEATHER_API")
     # Make request to OpenWeather API
+    print(lat, lon, api)
     data = requests.get(
         f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={api}"
     )
