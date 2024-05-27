@@ -1,26 +1,35 @@
 import json
 import requests
 
+from ..Router import Route
+
 from datetime import datetime
 from django.http import JsonResponse
 
 from django.core.handlers.wsgi import WSGIRequest
 
-STATE = json.loads(
-    requests.get(
-        "https://cdn.githubraw.com/term-world/TNN/main/weather.json"
-    ).text
-)
+try:
+    STATE = json.loads(
+        requests.get(
+            "https://cdn.githubraw.com/term-world/TNN/main/weather.json"
+        ).text
+    )
+except:
+    pass
 
-class Climate:
+class Climate(Route):
 
     sun = [800, 801]
 
     def __init__(self):
+        super().__init__()
         self.time = datetime.now().timestamp()
         self.windy = self.__is_windy()
         self.sunny = self.__is_sunny() and not self.__is_night()
         self.wind_speed = STATE["wind"]["speed"]
+
+    def __add_url(self, endpoint: str = "", fn: str = "") -> None:
+        self.add_url(endpoint, fn)
 
     def __is_sunny(self) -> bool:
         for condition in STATE["weather"]:
@@ -29,18 +38,26 @@ class Climate:
         return False
 
     def __is_night(self) -> bool:
-        sunrise = STATE["sys"]["sunrise"]
-        sunset = STATE["sys"]["sunset"]
-        if sunrise < self.time < sunset:
+        try:
+            sunrise = STATE["sys"]["sunrise"]
+            sunset = STATE["sys"]["sunset"]
+            if sunrise < self.time < sunset:
+                return False
+        except KeyError:
             return False
         return True
 
     def __is_windy(self) -> bool:
-        if STATE["wind"]["speed"] > 5:
-            return True
+        try:
+            if STATE["wind"]["speed"] > 5:
+                return True
+        except KeyError:
+            pass
         return False
 
-    def call(self, request: WSGIRequest)-> JsonResponse:
+    @Route.endpoint
+    def climate(self, request: WSGIRequest)-> JsonResponse:
+        print(self)
         response = {
             "wind": {
                 "windy": self.windy,
