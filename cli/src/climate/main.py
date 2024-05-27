@@ -7,21 +7,21 @@ from rich.console import Console
 from rich.table import Table
 
 # Import and call the load_dotenv function from the dotenv module (loads environment variables from a .env file)
-# from dotenv import load_dotenv
-# load_dotenv()
+from dotenv import load_dotenv
+load_dotenv()
 
 def main():
     """Display the weather report."""
     # Define api_url and port variables
-    # api_url = os.getenv("API_URL")
     # api_port = os.getenv("PORT")
+    api_url = os.getenv("API_URL")
 
     # Sends a get request to the TNN url and stores the response
-    # state = requests.get(f"{api_url}:{api_port}/services/api/v1/climate")
+    # STATE = json.loads(requests.get("https://cdn.githubraw.com/term-world/TNN/main/weather.json").text)
     STATE = json.loads(
-    requests.get(
-        "https://cdn.githubraw.com/term-world/TNN/main/weather.json"
-    ).text
+        requests.get(
+            api_url
+        ).text
     )
 
     # Textual output here that uses rich to format
@@ -38,18 +38,11 @@ def main():
     table = Table(show_header=False, title="Meadville", title_style="bold magenta")
     table.add_column()
     table.add_column()
+    # data = [("Weather", f"{weather_emojis.get(STATE['weather'][0]['main'], '')} {STATE['weather'][0]['main']}"), ("Temperature", f'{STATE["main"]["temp"]}°C'), ("Feels Like", f'{STATE["main"]["feels_like"]}°C'), ("Min Temp", f'{STATE["main"]["temp_min"]}°C'), ("Max Temp", f'{STATE["main"]["temp_max"]}°C'), ("Pressure", f'{STATE["main"]["pressure"]} hPa'), ("Humidity", f'{STATE["main"]["humidity"]}%'), ("Visibility", f'{STATE["visibility"]} m'), ("Wind Speed", f'{STATE["wind"]["speed"]} m/s'), ("Rain", f'{STATE.get("rain", {}).get("1h", "N/A")} mm'), ("Clouds", f'{STATE["clouds"]["all"]}%')]
     data = [
-        ("Weather", f"{weather_emojis.get(STATE['weather'][0]['main'], '')} {STATE['weather'][0]['main']}"),
-        ("Temperature", f'{STATE["main"]["temp"]}°C'),
-        ("Feels Like", f'{STATE["main"]["feels_like"]}°C'),
-        ("Min Temp", f'{STATE["main"]["temp_min"]}°C'),
-        ("Max Temp", f'{STATE["main"]["temp_max"]}°C'),
-        ("Pressure", f'{STATE["main"]["pressure"]} hPa'),
-        ("Humidity", f'{STATE["main"]["humidity"]}%'),
-        ("Visibility", f'{STATE["visibility"]} m'),
-        ("Wind Speed", f'{STATE["wind"]["speed"]} m/s'),
-        ("Rain", f'{STATE.get("rain", {}).get("1h", "N/A")} mm'),
-        ("Clouds", f'{STATE["clouds"]["all"]}%')
+        ("Windy", "Yes" if STATE['wind']['windy'] else "No"),
+        ("Wind Speed", f'{STATE["wind"]["windspeed"]} m/s'),
+        ("Sun", "Yes" if STATE['sun'] else "No"),
     ]
     for i, (label, value) in enumerate(data):
         table.add_row(label, value)
