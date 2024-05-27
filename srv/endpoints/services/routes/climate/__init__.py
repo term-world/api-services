@@ -14,8 +14,8 @@ try:
             "https://cdn.githubraw.com/term-world/TNN/main/weather.json"
         ).text
     )
-except:
-    pass
+except Exception as err:
+    STATE = {}
 
 class Climate(Route):
 
@@ -26,15 +26,20 @@ class Climate(Route):
         self.time = datetime.now().timestamp()
         self.windy = self.__is_windy()
         self.sunny = self.__is_sunny() and not self.__is_night()
-        self.wind_speed = STATE["wind"]["speed"]
+        self.wind_speed = 0
+        if "wind" in STATE:
+            self.wind_speed = STATE["wind"]["speed"]
 
     def __add_url(self, endpoint: str = "", fn: str = "") -> None:
         self.add_url(endpoint, fn)
 
     def __is_sunny(self) -> bool:
-        for condition in STATE["weather"]:
-            if condition["id"] in self.sun:
-                return True
+        try:
+            for condition in STATE["weather"]:
+                if condition["id"] in self.sun:
+                    return True
+        except:
+            pass
         return False
 
     def __is_night(self) -> bool:
@@ -43,7 +48,7 @@ class Climate(Route):
             sunset = STATE["sys"]["sunset"]
             if sunrise < self.time < sunset:
                 return False
-        except KeyError:
+        except:
             return False
         return True
 
@@ -51,13 +56,12 @@ class Climate(Route):
         try:
             if STATE["wind"]["speed"] > 5:
                 return True
-        except KeyError:
+        except:
             pass
         return False
 
-    @Route.endpoint
+    @Route.endpoint("v1")
     def climate(self, request: WSGIRequest)-> JsonResponse:
-        print(self)
         response = {
             "wind": {
                 "windy": self.windy,
