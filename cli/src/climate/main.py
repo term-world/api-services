@@ -13,11 +13,15 @@ load_dotenv()
 def main():
     """Display the weather report."""
     # Define api_url and port variables
-    # api_port = os.getenv("PORT")
+    api_port = os.getenv("PORT")
     api_url = os.getenv("API_URL")
 
-    # Sends a get request to the TNN url and stores the response
-    # STATE = json.loads(requests.get("https://cdn.githubraw.com/term-world/TNN/main/weather.json").text)
+    # If the API URL is localhost, append the port number
+    if "127.0.0.1" in api_url:
+        api_url = f"{api_url}:{api_port}"
+    
+    # https://api.theterm.world/v1/climate/all and 8000 //// http://127.0.0.1 and 443 --> these are the 2 locations for running the api
+    # Sends a get request to the url and stores the response
     STATE = json.loads(
         requests.get(
             api_url
@@ -38,11 +42,19 @@ def main():
     table = Table(show_header=False, title="Meadville", title_style="bold magenta")
     table.add_column()
     table.add_column()
-    # data = [("Weather", f"{weather_emojis.get(STATE['weather'][0]['main'], '')} {STATE['weather'][0]['main']}"), ("Temperature", f'{STATE["main"]["temp"]}°C'), ("Feels Like", f'{STATE["main"]["feels_like"]}°C'), ("Min Temp", f'{STATE["main"]["temp_min"]}°C'), ("Max Temp", f'{STATE["main"]["temp_max"]}°C'), ("Pressure", f'{STATE["main"]["pressure"]} hPa'), ("Humidity", f'{STATE["main"]["humidity"]}%'), ("Visibility", f'{STATE["visibility"]} m'), ("Wind Speed", f'{STATE["wind"]["speed"]} m/s'), ("Rain", f'{STATE.get("rain", {}).get("1h", "N/A")} mm'), ("Clouds", f'{STATE["clouds"]["all"]}%')]
+    # data = [("Windy", "Yes" if STATE['wind']['windy'] else "No"), ("Wind Speed", f'{STATE["wind"]["windspeed"]} m/s'), ("Sun", "Yes" if STATE['sun'] else "No")]
     data = [
-        ("Windy", "Yes" if STATE['wind']['windy'] else "No"),
-        ("Wind Speed", f'{STATE["wind"]["windspeed"]} m/s'),
-        ("Sun", "Yes" if STATE['sun'] else "No"),
+        ("Weather", f"{weather_emojis.get(STATE['weather'][0]['main'], '')} {STATE['weather'][0]['main']}"),
+        ("Temperature", f'{STATE["main"]["temp"]}°C'),
+        ("Feels Like", f'{STATE["main"]["feels_like"]}°C'),
+        ("Min Temp", f'{STATE["main"]["temp_min"]}°C'),
+        ("Max Temp", f'{STATE["main"]["temp_max"]}°C'),
+        ("Pressure", f'{STATE["main"]["pressure"]} hPa'),
+        ("Humidity", f'{STATE["main"]["humidity"]}%'),
+        ("Visibility", f'{STATE["visibility"]} m'),
+        ("Wind Speed", f'{STATE["wind"]["speed"]} m/s'),
+        ("Rain", f'{STATE.get("rain", {}).get("1h", "N/A")} mm'),
+        ("Clouds", f'{STATE["clouds"]["all"]}%')
     ]
     for i, (label, value) in enumerate(data):
         table.add_row(label, value)
