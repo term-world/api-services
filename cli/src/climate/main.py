@@ -3,26 +3,41 @@
 import os
 import requests
 import json
+
 from rich.console import Console
 from rich.table import Table
+from dotenv import load_dotenv
 
-# Import and call the load_dotenv function from the dotenv module (loads environment variables from a .env file)
-# from dotenv import load_dotenv
-# load_dotenv()
+# Load environment variables from .env file
+# TODO: Do we need to provide guarding around this variable
+#       once it's in the Codespace (i.e. no env file)?
+load_dotenv()
+
+def convert_temp_scale(state: dict = {}) -> None:
+    for field in state["main"]:
+        if "temp" in field or "feels_like" in field:
+            state["main"][field] = int(state["main"][field]) - 273.15
+            if os.getenv("TEMP_SCALE") == "F":
+                state["main"][field] = round(
+                    (state["main"][field] * 1.8) + 32,
+                    2
+                )
 
 def main():
     """Display the weather report."""
     # Define api_url and port variables
-    # api_url = os.getenv("API_URL")
-    # api_port = os.getenv("PORT")
+    api_url = os.getenv("API_URL")
+    api_port = os.getenv("PORT")
 
     # Sends a get request to the TNN url and stores the response
-    # state = requests.get(f"{api_url}:{api_port}/services/api/v1/climate")
     STATE = json.loads(
-    requests.get(
-        "https://cdn.githubraw.com/term-world/TNN/main/weather.json"
-    ).text
+        requests.get(
+            f"{api_url}:{api_port}/v1/climate/all"
+        ).text
     )
+
+    # Convert the temperature scale to environment-defined scale
+    convert_temp_scale(STATE)
 
     # Textual output here that uses rich to format
     weather_emojis = {
