@@ -23,17 +23,25 @@ def convert_temp_scale(state: dict = {}) -> None:
                     2
                 )
 
+# Import and call the load_dotenv function from the dotenv module (loads environment variables from a .env file)
+from dotenv import load_dotenv
+load_dotenv()
+
 def main():
     """Display the weather report."""
     # Define api_url and port variables
     api_url = os.getenv("API_URL")
     api_port = os.getenv("PORT")
 
-    # Sends a get request to the TNN url and stores the response
+    # If the API URL is localhost, append the port number
+    if "127.0.0.1" in api_url:
+        api_url = f"{api_url}:{api_port}"
+
+    # Sends a get request to the url and stores the response
     STATE = json.loads(
         requests.get(
-            f"{api_url}:{api_port}/v1/climate/all"
-        ).text
+            f"{api_url}/v1/climate/all"
+        ).content
     )
 
     # Convert the temperature scale to environment-defined scale
