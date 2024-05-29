@@ -57,16 +57,17 @@ def main():
         "Drizzle": "🌦️",
         "Mist": "🌫️"
     }
+
     console = Console()
     table = Table(show_header=False, title="Meadville", title_style="bold magenta")
     table.add_column()
     table.add_column()
     data = [
         ("Weather", f"{weather_emojis.get(STATE['weather'][0]['main'], '')} {STATE['weather'][0]['main']}"),
-        ("Temperature", f'{STATE["main"]["temp"]}°C'),
-        ("Feels Like", f'{STATE["main"]["feels_like"]}°C'),
-        ("Min Temp", f'{STATE["main"]["temp_min"]}°C'),
-        ("Max Temp", f'{STATE["main"]["temp_max"]}°C'),
+        ("Temperature", f'{STATE["main"]["temp"]} °{os.getenv("TEMP_SCALE")}'),
+        ("Feels Like", f'{STATE["main"]["feels_like"]} °{os.getenv("TEMP_SCALE")}'),
+        ("Min Temp", f'{STATE["main"]["temp_min"]} °{os.getenv("TEMP_SCALE")}'),
+        ("Max Temp", f'{STATE["main"]["temp_max"]} °{os.getenv("TEMP_SCALE")}'),
         ("Pressure", f'{STATE["main"]["pressure"]} hPa'),
         ("Humidity", f'{STATE["main"]["humidity"]}%'),
         ("Visibility", f'{STATE["visibility"]} m'),
