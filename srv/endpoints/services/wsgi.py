@@ -1,5 +1,5 @@
 """
-WSGI config for api project.
+WSGI config for services project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -23,12 +23,16 @@ import os
 import sys
 from django.core.wsgi import get_wsgi_application
 
+<<<<<<< HEAD:services/src/api/api/wsgi.py
 # Add the path to term-util/libs to the Python path
 sys.path.append('/Users/bergasanargya/summer_research_AC/term-util/libs')
 print("Python path in wsgi.py:")
 for path in sys.path:
     print(path)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'api.settings')
+=======
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'services.settings')
+>>>>>>> main:srv/endpoints/services/wsgi.py
 
 application = get_wsgi_application()
 
