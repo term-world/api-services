@@ -26,8 +26,8 @@ except Exception as err:
     print(err)
     STATE = {}
 
-class Climate(Route):
 
+class Climate(Route):
     sun = [800, 801]
 
     def __init__(self):
@@ -72,15 +72,12 @@ class Climate(Route):
     @Route.endpoint("v1")
     def conditions(self, request: WSGIRequest) -> JsonResponse:
         response = {
-            "wind": {
-                "windy": self.windy,
-                "windspeed": self.wind_speed
-            },
-            "sun": self.sunny
+            "wind": {"windy": self.windy, "windspeed": self.wind_speed},
+            "sun": self.sunny,
         }
-        return JsonResponse(response, status = 200)
+        return JsonResponse(response, status=200)
 
     @Route.endpoint("v1")
     def all(self, request: WSGIRequest) -> JsonResponse:
         print(STATE)
-        return JsonResponse(STATE, status = 200)
+        return JsonResponse(STATE, status=200)
