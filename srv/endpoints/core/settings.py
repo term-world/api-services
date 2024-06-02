@@ -24,9 +24,6 @@ ALLOWED_HOSTS = [
 
 DEBUG = True
 
-<<<<<<< HEAD:srv/endpoints/services/settings.py
-ALLOWED_HOSTS = ["127.0.0.1", "api.theterm.world"]
-=======
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -37,22 +34,10 @@ DATABASES = {
         'PORT': '',
     }
 }
->>>>>>> refactor-api-side-branch:srv/endpoints/core/settings.py
 
 ROOT_URLCONF='core.urls'
 
 INSTALLED_APPS = [
-<<<<<<< HEAD:srv/endpoints/services/settings.py
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "rest_framework",
-    "api",
-    "services",
-=======
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -62,7 +47,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'core',
     'climate',
->>>>>>> refactor-api-side-branch:srv/endpoints/core/settings.py
 ]
 
 MIDDLEWARE = [
@@ -75,11 +59,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-<<<<<<< HEAD:srv/endpoints/services/settings.py
-ROOT_URLCONF = "services.urls"
-
-=======
->>>>>>> refactor-api-side-branch:srv/endpoints/core/settings.py
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -96,23 +75,7 @@ TEMPLATES = [
     },
 ]
 
-<<<<<<< HEAD:srv/endpoints/services/settings.py
-WSGI_APPLICATION = "services.wsgi.application"
-
-
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
-=======
 WSGI_APPLICATION = 'core.wsgi.application'
->>>>>>> refactor-api-side-branch:srv/endpoints/core/settings.py
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
