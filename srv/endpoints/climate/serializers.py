@@ -1,6 +1,21 @@
 from rest_framework import serializers
-from climate.models import TransientModel
+from climate.models import ClimateModel
 
-class TransientModelSerializer(serializers.ModelSerializer):
+class ClimateModelSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TransientModel
+        model = ClimateModel
+        fields = [
+            "coord",
+            "weather",
+            "base",
+            "main",
+            "visibility",
+            "wind",
+            "clouds",
+            "dt",
+            "sys",
+            "timezone",
+            "id",
+            "name",
+            "cod"
+        ]

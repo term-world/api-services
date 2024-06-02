@@ -11,6 +11,7 @@ dependencies = [
     "python-dotenv",
     "pennant",
     "django",
+    "django_rest_swagger",
     "django_rest_framework"
 ]
 

@@ -1,16 +1,20 @@
-from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
+from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from django.http import JsonResponse
 from rest_framework.permissions import AllowAny
 
-from climate.models import TransientModel
-from climate.serializers import TransientModelSerializer
+from climate.models import ClimateModel
+from climate.serializers import ClimateModelSerializer
 
-class ClimateDataViewAll(APIView):
+class ClimateDataViewAll(ListAPIView):
 
     permission_classes = [AllowAny]
-    serializer_class = TransientModelSerializer
+    serializer_class = ClimateModelSerializer
 
-    def get(self, request, format=None):
-        return TransientModel.obj.all()
-        #return JsonResponse({"!":"."}, status = 200)
+    def get_queryset(self):
+        try:
+            queryset = ClimateModel.obj.all()
+            return queryset
+        except Exception as e:
+            raise APIException(e) from e
