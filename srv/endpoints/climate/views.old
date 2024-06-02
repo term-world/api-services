@@ -1,0 +1,17 @@
+from rest_framework.exceptions import APIException
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import AllowAny
+
+from climate.models import TransientModel
+from climate.serializers import TransientModelSerializer
+
+class TransientModelView(ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = TransientModelSerializer
+
+    def get_queryset(self):
+        try:
+            queryset = TransientModel.obj.all()
+            return queryset
+        except Exception as e:
+            raise APIException(e) from e

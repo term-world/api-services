@@ -4,10 +4,13 @@
 import os
 import sys
 
-
 def main():
     """Run administrative tasks."""
+<<<<<<< HEAD
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "services.settings")
+=======
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
+>>>>>>> refactor-api-side-branch
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -18,6 +21,10 @@ def main():
         ) from exc
     execute_from_command_line(sys.argv)
 
+<<<<<<< HEAD
 
 if __name__ == "__main__":
+=======
+if __name__ == '__main__':
+>>>>>>> refactor-api-side-branch
     main()
