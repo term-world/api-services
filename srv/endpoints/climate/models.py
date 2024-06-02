@@ -1,6 +1,6 @@
 import os
 import requests
-from collections import UserDict, UserList
+from collections import UserList
 from django.db import models
 from django.core import serializers
 from django.core.cache import caches
@@ -56,6 +56,8 @@ class ClimateModel(models.Model):
     dt = models.JSONField()
     sys = models.JSONField()
     timezone = models.JSONField()
+    # Designating the id field as primary key is required, though
+    # its value is dubious in this case.
     id = models.JSONField(primary_key=True)
     name = models.JSONField()
     cod = models.JSONField()
