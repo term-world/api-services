@@ -56,8 +56,12 @@ class ClimateModel(models.Model):
     dt = models.JSONField()
     sys = models.JSONField()
     timezone = models.JSONField()
-    # Designating the id field as primary key is required, though
-    # its value is dubious in this case.
-    id = models.JSONField(primary_key=True)
     name = models.JSONField()
     cod = models.JSONField()
+
+    def as_dict(self):
+        result = {}
+        fields = self._meta.fields
+        for field in fields:
+            result[field.name] = getattr(self, field.name)
+        return result
