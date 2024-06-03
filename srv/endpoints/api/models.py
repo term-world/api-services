@@ -2,9 +2,7 @@ from django.db import models
 
 class Item(models.Model):
     name = models.CharField(max_length=100)
-    file = models.CharField(max_length=255)
-    count = models.IntegerField()
-    consumable = models.BooleanField()
+    quantity = models.IntegerField()
 
     def __str__(self):
         return self.name
