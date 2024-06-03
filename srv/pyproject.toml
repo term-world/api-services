@@ -6,6 +6,8 @@ build-backend = "setuptools.build_meta:__legacy__"
 name = "world-codespaces-api-services"
 version = "0.1.0"
 dependencies = [
+    "requests",
+    "python-dotenv",
     "pennant",
     "django",
     "django_rest_framework"
