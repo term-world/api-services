@@ -1,6 +1,6 @@
-from . import views
 from django.urls import re_path, path
+from .views import ClimateDataViewAll
 
-urlpatterns  = [
-    re_path(r'^$', views.ClimateDataViewAll.as_view(), name = "climate-all")
+urlpatterns = [
+    path('', ClimateDataViewAll.as_view(), name='climate-all'),
 ]

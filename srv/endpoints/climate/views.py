@@ -10,10 +10,6 @@ from rest_framework.permissions import AllowAny
 from climate.models import ClimateModel
 from climate.serializers import ClimateModelSerializer
 
-from rest_framework_swagger.views import get_swagger_view
-
-schema_view = get_swagger_view("Climate API", url = "climate/docs")
-
 class ClimateDataViewAll(RetrieveAPIView):
 
     permission_classes = [AllowAny]
