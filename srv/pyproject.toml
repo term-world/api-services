@@ -7,6 +7,7 @@ name = "world-codespaces-api-services"
 version = "0.1.0"
 dependencies = [
     "requests",
+    "setuptools",
     "psycopg2-binary",
     "python-dotenv",
     "pennant",
