@@ -5,4 +5,4 @@ class OmnipresenceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OmnipresenceModel
-        fields = ["user", "char", "cwd"]
+        fields = ["username", "charname", "working_dir"]
