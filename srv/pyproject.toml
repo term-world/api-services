@@ -12,7 +12,7 @@ dependencies = [
     "python-dotenv",
     "pennant",
     "django",
-    "django_rest_swagger",
+    "drf-yasg",
     "django_rest_framework"
 ]
 
