@@ -24,14 +24,20 @@ ALLOWED_HOSTS = [
 
 DEBUG = True
 
+# Load .env file
+load_dotenv(dotenv_path=os.path.join(BASE_DIR, 'srv/endpoints/.env'))
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Database configuration
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'api',
-        'USER': os.getenv("API_DB_USER"),
-        'PASSWORD': os.getenv("API_DB_PASS"),
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
