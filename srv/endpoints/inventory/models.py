@@ -1,10 +1,12 @@
 from django.db import models
 
 class Item(models.Model):
-    name = models.CharField(max_length=100)
-    file = models.CharField(max_length=255)
-    count = models.IntegerField()
-    consumable = models.BooleanField()
+    item_name = models.CharField(max_length=255)
+    item_qty = models.FloatField()
+    item_weight = models.FloatField()
+    item_bulk = models.FloatField()
+    item_consumable = models.BooleanField()
+    item_bin = models.BinaryField()
 
     def __str__(self):
         return self.name
