@@ -16,5 +16,12 @@ class OmnipresenceView(APIView):
         serializer = OmnipresenceSerializer(data = data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status = 201)
+            return Response(status = 201)
+        return Response(serializer.errors, status = 400)
+
+    def put(self, request, *args, **kwargs):
+        serializer = OmnipresenceSerializer(data = request.DATA, partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status = 200)
         return Response(serializer.errors, status = 400)
