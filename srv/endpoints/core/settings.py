@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'climate',
     'pgtrigger',
     'drf_yasg',
-    'termdani'
+    'inventory'
 ]
 
 MIDDLEWARE = [
