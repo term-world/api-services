@@ -1,6 +1,23 @@
+import pgtrigger
 from django.db import models
 
-class Item(models.Model):
+@pgtrigger.register(
+    pgtrigger.Trigger(
+        name='decrement_item_qty_trigger',
+        level=pgtrigger.Row,
+        operation=pgtrigger.Update,
+        when=pgtrigger.Before,
+        func="""
+        BEGIN
+            IF NEW.item_qty = 0 THEN
+                DELETE FROM inventory_inventory WHERE item_id = OLD.item_id;
+            END IF;
+            RETURN NEW;
+        END;
+        """
+    )
+)
+class Inventory(models.Model):
     item_name = models.CharField(max_length=255)
     item_qty = models.FloatField()
     item_weight = models.FloatField()
@@ -9,12 +26,4 @@ class Item(models.Model):
     item_bin = models.BinaryField()
 
     def __str__(self):
-        return self.name
-
-class Inventory(models.Model):
-    user_id = models.IntegerField()
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
-
-    def __str__(self):
-        return f"{self.user_id} - {self.item.name}"
+        return self.item_name
