@@ -21,6 +21,7 @@ class Migration(migrations.Migration):
                 ('main', models.JSONField()),
                 ('visibility', models.JSONField()),
                 ('wind', models.JSONField()),
+                ('rain', models.JSONField()),
                 ('clouds', models.JSONField()),
                 ('dt', models.JSONField()),
                 ('sys', models.JSONField()),

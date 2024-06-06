@@ -12,8 +12,12 @@ dependencies = [
     "python-dotenv",
     "pennant",
     "django",
+<<<<<<< HEAD
     "django-pgtrigger",
     "django_rest_swagger",
+=======
+    "drf-yasg",
+>>>>>>> refactored-api-structure
     "django_rest_framework"
 ]
 
