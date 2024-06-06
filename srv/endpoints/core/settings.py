@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'core',
     'climate',
     'pgtrigger',
+    'drf_wasg',
     'termdani'
 ]
 
