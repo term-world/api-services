@@ -1,0 +1,15 @@
+/* Swagger Container */
+.swagger-ui {
+    background-color: #27292E;
+    color: #FFFFFF;
+}
+
+/* Swagger Title */
+.swagger-ui .topbar .topbar-wrapper .info .title {
+    color: #E0B025; /* yellow */
+}
+
+/* Swagger Description */
+.swagger-ui .topbar .topbar-wrapper .info .description {
+    color: #E49A25; /* orange */
+}

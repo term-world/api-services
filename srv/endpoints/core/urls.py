@@ -19,6 +19,6 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('v1/climate/', include('climate.urls')),
-    path('v1/climate/docs/', schema_view.with_ui('swagger', cache_timeout = 0),name = 'Climate API documentation.')
+   path('v1/climate/', include('climate.urls')),
+   path('v1/climate/docs/', schema_view.with_ui('swagger', cache_timeout=0), name = 'Climate API documentation.')
 ]
