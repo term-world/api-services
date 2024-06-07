@@ -26,7 +26,7 @@ class OmnipresenceModel(models.Model):
     username = models.CharField(max_length = 255, unique = True)
     charname = models.CharField(max_length = 255, unique = True)
     working_dir = models.CharField(max_length = 512)
-    last_active = models.DateField(auto_now_add = True)
+    last_active = models.DateTimeField(auto_now_add = True)
     is_active = models.BooleanField(default = True)
 
     def __str__(self):
