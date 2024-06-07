@@ -10,7 +10,7 @@ from django.db import models
         func="""
         BEGIN
             IF NEW.item_qty = 0 THEN
-                DELETE FROM inventory_inventory WHERE item_id = OLD.item_id;
+                DELETE FROM inventory_inventory WHERE item_id = OLD.id;
             END IF;
             RETURN NEW;
         END;

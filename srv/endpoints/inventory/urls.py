@@ -24,4 +24,5 @@ urlpatterns = [
     path('<int:item_id>/', InventoryView.as_view(), name='inventory-update'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('', InventoryView.as_view(), name='inventory-list'),  # New pattern for listing all items
 ]

@@ -21,6 +21,20 @@ schema_view = get_schema_view(
 )
 
 class InventoryView(APIView):
+    def get(self, request, *args, **kwargs):
+        item_id = kwargs.get('item_id')
+        if item_id:
+            try:
+                inventory_item = Inventory.objects.get(pk=item_id)
+                serializer = InventorySerializer(inventory_item)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except Inventory.DoesNotExist:
+                return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            inventory_items = Inventory.objects.all()
+            serializer = InventorySerializer(inventory_items, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
     def post(self, request, *args, **kwargs):
         serializer = InventorySerializer(data=request.data)
         if serializer.is_valid():
