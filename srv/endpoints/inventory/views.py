@@ -20,33 +20,49 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
-class InventoryView(APIView):
-    def get(self, request, *args, **kwargs):
-        item_id = kwargs.get('item_id')
-        if item_id:
-            try:
-                inventory_item = Inventory.objects.get(pk=item_id)
-                serializer = InventorySerializer(inventory_item)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            except Inventory.DoesNotExist:
-                return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
-        else:
-            inventory_items = Inventory.objects.all()
-            serializer = InventorySerializer(inventory_items, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        
+class AddInventoryView(APIView):
     def post(self, request, *args, **kwargs):
-        serializer = InventorySerializer(data=request.data)
+        data = request.data.copy()
+        # Set default values
+        data.setdefault('item_weight', 1.0)
+        data.setdefault('item_bulk', 1.0)
+        data.setdefault('item_consumable', False)
+        serializer = InventorySerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, *args, **kwargs):
-        item_id = kwargs.get('item_id')
-        inventory_item = Inventory.objects.get(pk=item_id)
+class DropInventoryView(APIView):
+    def post(self, request, *args, **kwargs):
+        item_name = request.data.get('item_name')
+        if not item_name:
+            return Response({"error": "Item name is required"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            inventory_item = Inventory.objects.get(item_name=item_name)
+            inventory_item.delete()
+            return Response({"message": "Item dropped"}, status=status.HTTP_200_OK)
+        except Inventory.DoesNotExist:
+            return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
+
+class UpdateInventoryView(APIView):
+    def post(self, request, *args, **kwargs):
+        item_name = request.data.get('item_name')
+        if not item_name:
+            return Response({"error": "Item name is required"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            inventory_item = Inventory.objects.get(item_name=item_name)
+        except Inventory.DoesNotExist:
+            return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
+        
         serializer = InventorySerializer(inventory_item, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ListInventoryView(APIView):
+    def get(self, request, *args, **kwargs):
+        inventory_items = Inventory.objects.all()
+        serializer = InventorySerializer(inventory_items, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
