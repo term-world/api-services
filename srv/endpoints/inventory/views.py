@@ -1,10 +1,11 @@
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from .models import Inventory
 from .serializers import InventorySerializer
-
-from drf_yasg.views import get_schema_view  # Add this import
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework import permissions
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -18,9 +19,6 @@ schema_view = get_schema_view(
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
-
-
-
 
 class InventoryView(APIView):
     def post(self, request, *args, **kwargs):

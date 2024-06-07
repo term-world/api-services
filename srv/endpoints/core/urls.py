@@ -1,6 +1,6 @@
-from django.urls import path, re_path, include
-from rest_framework.reverse import reverse
+from django.urls import path, include
 
 urlpatterns = [
-    re_path(r'^v1/climate', include(('climate.urls','climate'), namespace='v1'))
+    path('v1/climate/', include('climate.urls', namespace='climate')),
+    path('v1/inventory/', include('inventory.urls', namespace='inventory')),
 ]
