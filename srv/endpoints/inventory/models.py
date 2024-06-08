@@ -18,12 +18,11 @@ from django.db import models
     )
 )
 class Inventory(models.Model):
-    item_name = models.CharField(max_length=255)
-    item_qty = models.FloatField()
-    item_weight = models.FloatField()
-    item_bulk = models.FloatField()
-    item_consumable = models.BooleanField()
-    item_bin = models.BinaryField()
+    item_name = models.CharField(max_length=225, unique=True)
+    item_qty = models.FloatField(default=1.0)
+    item_weight = models.FloatField(default=1.0)
+    item_bulk = models.FloatField(default=1.0)
+    item_consumable = models.BooleanField(default=False)
 
     def __str__(self):
         return self.item_name

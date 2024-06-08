@@ -10,3 +10,8 @@ class InventorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Inventory
         fields = '__all__'
+
+    def validate_item_name(self, value):
+        if Inventory.objects.filter(item_name=value).exists():
+            raise serializers.ValidationError("An item with this name already exists.")
+        return value

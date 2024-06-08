@@ -22,6 +22,8 @@ ALLOWED_HOSTS = [
     os.getenv("API_URL")
 ]
 
+CSRF_TRUSTED_ORIGINS = ['http://localhost', 'http://127.0.0.1']
+
 DEBUG = True
 
 # Load .env file
