@@ -35,6 +35,7 @@ class AddInventoryView(APIView):
 
 class DropInventoryView(APIView):
     def post(self, request, *args, **kwargs):
+        logger.debug("DropInventoryView POST request data: %s", request.data)
         item_name = request.data.get('item_name')
         if not item_name:
             return Response({"error": "Item name is required"}, status=status.HTTP_400_BAD_REQUEST)
