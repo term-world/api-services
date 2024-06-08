@@ -7,9 +7,12 @@ name = "world-codespaces-api-services"
 version = "0.1.0"
 dependencies = [
     "requests",
+    "setuptools",
+    "psycopg2-binary",
     "python-dotenv",
     "pennant",
     "django",
+    "drf-yasg",
     "django_rest_framework"
 ]
 
