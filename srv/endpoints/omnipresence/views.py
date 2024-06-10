@@ -1,21 +1,23 @@
 import json
-from django.shortcuts import render
+
 from django.core import serializers
 from django.http import HttpResponse
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.permissions import AllowAny
+from rest_framework.mixins import UpdateModelMixin
 from omnipresence.models import OmnipresenceModel
 from omnipresence.serializer import OmnipresenceSerializer
 
-class OmnipresenceView(APIView):
+class OmnipresenceView(GenericAPIView):
+
+    queryset = OmnipresenceModel.objects.all()
 
     def get(self, request, *args, **kwargs):
         character = OmnipresenceModel.objects.filter(
             charname = request.GET.get('charname')
-        ).values('username','charname','working_dir')
-        print(character)
+        ).values('pk', 'username', 'charname', 'working_dir', 'is_active')
         if character:
             return HttpResponse(
                 json.dumps(list(character)),
@@ -35,3 +37,11 @@ class OmnipresenceView(APIView):
             serializer.save()
             return Response(status = 201)
         return Response(serializer.errors, status = 400)
+
+class OmnipresenceUpdateView(GenericAPIView, UpdateModelMixin):
+
+    queryset = OmnipresenceModel.objects.all()
+    serializer_class = OmnipresenceSerializer
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
