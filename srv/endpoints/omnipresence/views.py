@@ -38,6 +38,20 @@ class OmnipresenceView(GenericAPIView):
             return Response(status = 201)
         return Response(serializer.errors, status = 400)
 
+class OmnipresenceActiveView(GenericAPIView):
+
+    queryset = OmnipresenceModel.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        actives = OmnipresenceModel.objects.filter(
+            is_active = True
+        ).values('username','charname')
+        return HttpResponse(
+            json.dumps(list(actives)),
+            status = 200,
+            content_type = 'application/json'
+        )
+
 class OmnipresenceUpdateView(GenericAPIView, UpdateModelMixin):
 
     queryset = OmnipresenceModel.objects.all()

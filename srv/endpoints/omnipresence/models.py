@@ -17,8 +17,7 @@ class OmnipresenceModel(models.Model):
                 operation = pgtrigger.Update,
                 when = pgtrigger.Before,
                 func = """
-                    NEW.is_active = True;
-                    RETURN NEW;
+                    NEW.is_active = True; RETURN NEW;
                 """
             )
         ]

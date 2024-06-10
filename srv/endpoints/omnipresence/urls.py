@@ -1,7 +1,8 @@
 from . import views
-from django.urls import re_path, path
+from django.urls import path, re_path
 
 urlpatterns  = [
-    re_path('update/(?P<pk>\d+)', views.OmnipresenceUpdateView.as_view(), name = "omnipresence-update"),
-    re_path('$', views.OmnipresenceView.as_view(), name = "omnipresence-post"),
+    path('', views.OmnipresenceView.as_view()),
+    re_path(r'update/(?P<pk>\d+)/', views.OmnipresenceUpdateView.as_view()),
+    re_path(r'active/', views.OmnipresenceActiveView.as_view()),
 ]
