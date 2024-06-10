@@ -38,7 +38,7 @@ def main():
     # Sends a get request to the url and stores the response
     STATE = json.loads(
         requests.get(
-            f"{api_url}/v1/climate/all"
+            f"{api_url}/v1/climate"
         ).content
     )
 
