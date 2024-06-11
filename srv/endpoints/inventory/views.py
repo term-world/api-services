@@ -25,19 +25,18 @@ schema_view = get_schema_view(
 )
 
 class AddInventoryView(APIView):
+
     def post(self, request, *args, **kwargs):
-        data = request.data.copy()
-        # Set default values
-        data.setdefault('item_weight', 1.0)
-        data.setdefault('item_bulk', 1.0)
-        data.setdefault('item_consumable', False)
-        serializer = InventorySerializer(data=data)
+        # TODO: Validate instead of set defaults; defaults come
+        #       from superclass
+        serializer = InventorySerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DropInventoryView(APIView):
+
     def post(self, request, *args, **kwargs):
         logger.debug("DropInventoryView POST request data: %s", request.data)
         item_name = request.data.get('item_name')
@@ -59,7 +58,6 @@ class UpdateInventoryView(APIView):
             inventory_item = Inventory.objects.get(item_name=item_name)
         except Inventory.DoesNotExist:
             return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
-        
         serializer = InventorySerializer(inventory_item, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -68,6 +66,7 @@ class UpdateInventoryView(APIView):
 
 class ListInventoryView(APIView):
     def get(self, request, *args, **kwargs):
-        inventory_items = Inventory.objects.all()
+        inventory_items = Inventory.objects.filter(
+            item_owner = request
         serializer = InventorySerializer(inventory_items, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

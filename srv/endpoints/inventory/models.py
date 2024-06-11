@@ -18,11 +18,17 @@ from django.db import models
     )
 )
 class Inventory(models.Model):
-    item_name = models.CharField(max_length=225, unique=True)
+    item_owner = models.ForeignKey(
+        'omnipresence.OmnipresenceModel',
+        on_delete = models.DO_NOTHING,
+        default = 0
+    )
+    item_name = models.CharField(max_length = 255)
     item_qty = models.FloatField(default=1.0)
     item_weight = models.FloatField(default=1.0)
     item_bulk = models.FloatField(default=1.0)
     item_consumable = models.BooleanField(default=False)
+    item_bytestring = models.BinaryField()
 
     def __str__(self):
         return self.item_name

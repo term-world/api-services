@@ -35,11 +35,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT'),
+        'NAME': 'api',
+        'USER': os.getenv('API_DB_USER'),
+        'PASSWORD': os.getenv('API_DB_PASS'),
+        'HOST': "localhost",
+        'PORT': ''
     }
 }
 
@@ -52,13 +52,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pgtrigger',
     'rest_framework',
-    'rest_framework_swagger',
+    'drf_yasg',
     'core',
     'climate',
-    'pgtrigger',
-    'drf_yasg',
-    'inventory'
+    'inventory',
+    'omnipresence'
 ]
 
 MIDDLEWARE = [
