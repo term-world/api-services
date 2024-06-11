@@ -22,6 +22,6 @@ urlpatterns = [
     path('add/', AddInventoryView.as_view(), name='inventory-add'),  # Route for adding items
     path('drop/', DropInventoryView.as_view(), name='inventory-drop'),  # Route for dropping items
     path('update/<int:id>', UpdateInventoryView.as_view(), name='inventory-update'),  # Route for updating items
-    path('list/<int:id>', ListInventoryView.as_view(), name='inventory-list'),  # Route for listing all items
+    path('list', ListInventoryView.as_view(), name='inventory-list'),  # Route for listing all items
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),  # Swagger documentation
 ]

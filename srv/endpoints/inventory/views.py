@@ -1,3 +1,9 @@
+import json
+import requests
+import logging
+import omnipresence
+
+from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,7 +12,6 @@ from .serializers import InventorySerializer
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
-import logging
 
 # Set up the logger
 logger = logging.getLogger(__name__)
@@ -27,13 +32,11 @@ schema_view = get_schema_view(
 class AddInventoryView(APIView):
 
     def post(self, request, *args, **kwargs):
-        # TODO: Validate instead of set defaults; defaults come
-        #       from superclass
         serializer = InventorySerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponse(status=status.HTTP_201_CREATED)
+        return HttpResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DropInventoryView(APIView):
 
@@ -50,6 +53,7 @@ class DropInventoryView(APIView):
             return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
 
 class UpdateInventoryView(APIView):
+    # TODO: Update is a PATCH request
     def post(self, request, *args, **kwargs):
         item_name = request.data.get('item_name')
         if not item_name:
@@ -65,8 +69,16 @@ class UpdateInventoryView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ListInventoryView(APIView):
+
     def get(self, request, *args, **kwargs):
+        print(request.data.get('charname',''))
+        inventory_owner_id = omnipresence.models.OmnipresenceModel.objects.filter(
+            charname = request.data.get('charname')
+        ).values('id')
+        print(inventory_owner_id)
         inventory_items = Inventory.objects.filter(
-            item_owner = request
+            item_owner = request.data.get(inventory_owner_id)
+        )
         serializer = InventorySerializer(inventory_items, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        fields = [obj.as_dict() for obj in serializer.data]
+        return HttpResponse(json.dumps(serializer.data), status=status.HTTP_200_OK, content_type = 'application/json')

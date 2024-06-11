@@ -17,5 +17,6 @@ readme = "README.md"
 description = "Client-sided API interaction installed to Codespaces container."
 
 [project.scripts]
-inventory = "inventory:main.main"
+inventory = "inventory:main.list"
+get = "inventory:main.acquire"
 climate = "climate:main.main"
