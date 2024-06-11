@@ -6,16 +6,33 @@ from getpass import getuser
 from dotenv import load_dotenv
 from arglite import parser as cliarg
 
+from rich.table import Table
+from rich.console import Console
+
 load_dotenv()
 
 def list():
-    content = requests.get(
+
+    allowed = ["item_name", "item_qty", "item_weight", "item_consumable"]
+
+    api_request = requests.get(
         f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/inventory/list",
         params = {
             "charname": getuser()
         }
     )
-    return content.json()
+
+    table = Table(title=f"{getuser()}'s inventory")
+    table.add_column("Item name")
+    table.add_column("Item count")
+    table.add_column("Space Occupied")
+    table.add_column("Consumable")
+
+    for item in api_request.json():
+        values = [str(item[field]) for field in item if field in allowed]
+        table.add_row(*values)
+
+    Console().print(table)
 
 def acquire():
     # TODO: Make wayyyyy more dynamic

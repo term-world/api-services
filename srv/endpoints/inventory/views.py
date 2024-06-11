@@ -79,6 +79,5 @@ class ListInventoryView(APIView):
             item_owner = inventory_owner_id
         )
         serializer = InventorySerializer(inventory_items, many=True)
-        print(serializer.data)
         fields = [obj for obj in serializer.data]
         return HttpResponse(json.dumps(serializer.data), status=status.HTTP_200_OK, content_type = 'application/json')

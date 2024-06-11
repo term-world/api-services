@@ -8,12 +8,26 @@ from django.db import models
         operation=pgtrigger.Update,
         when=pgtrigger.Before,
         func="""
-        BEGIN
-            IF NEW.item_qty = 0 THEN
-                DELETE FROM inventory_inventory WHERE item_id = OLD.id;
-            END IF;
-            RETURN NEW;
-        END;
+            BEGIN
+                IF NEW.item_qty = 0 THEN
+                    DELETE FROM inventory_inventory WHERE item_id = OLD.id;
+                END IF;
+                RETURN NEW;
+            END;
+        """
+    ),
+    pgtrigger.Trigger(
+        name = 'calculate_item_bulk',
+        level = pgtrigger.Row,
+        operation = pgtrigger.Update,
+        when = pgtrigger.Before,
+        func = """
+            BEGIN
+                UPDATE inventory_inventory
+                SET item_bulk = NEW.item_qty * item_weight
+                WHERE item_id = OLD.id;
+                RETURN NEW;
+            END;
         """
     )
 )
