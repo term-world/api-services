@@ -71,14 +71,14 @@ class UpdateInventoryView(APIView):
 class ListInventoryView(APIView):
 
     def get(self, request, *args, **kwargs):
-        print(request.data.get('charname',''))
-        inventory_owner_id = omnipresence.models.OmnipresenceModel.objects.filter(
-            charname = request.data.get('charname')
+        inventory_owner_data = omnipresence.models.OmnipresenceModel.objects.filter(
+            charname = request.GET.get('charname')
         ).values('id')
-        print(inventory_owner_id)
+        inventory_owner_id = list(inventory_owner_data)[0]['id']
         inventory_items = Inventory.objects.filter(
-            item_owner = request.data.get(inventory_owner_id)
+            item_owner = inventory_owner_id
         )
         serializer = InventorySerializer(inventory_items, many=True)
-        fields = [obj.as_dict() for obj in serializer.data]
+        print(serializer.data)
+        fields = [obj for obj in serializer.data]
         return HttpResponse(json.dumps(serializer.data), status=status.HTTP_200_OK, content_type = 'application/json')
