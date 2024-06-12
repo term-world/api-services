@@ -18,6 +18,7 @@ description = "Client-sided API interaction installed to Codespaces container."
 
 [project.scripts]
 inventory = "inventory:main.list"
-get = "inventory:main.acquire"
+#get = "inventory:main.acquire"
+get = "inventory:Acquire.cmd"
 drop = "inventory:main.drop"
 climate = "climate:main.main"
