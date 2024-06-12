@@ -15,20 +15,6 @@ from django.db import models
                 RETURN NEW;
             END;
         """
-    ),
-    pgtrigger.Trigger(
-        name = 'calculate_item_bulk',
-        level = pgtrigger.Row,
-        operation = pgtrigger.Update,
-        when = pgtrigger.Before,
-        func = """
-            BEGIN
-                UPDATE inventory_inventory
-                SET item_bulk = NEW.item_qty * item_weight
-                WHERE item_id = OLD.id;
-                RETURN NEW;
-            END;
-        """
     )
 )
 class Inventory(models.Model):
