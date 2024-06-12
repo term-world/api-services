@@ -1,10 +1,11 @@
 import os
+import sys
+import base64
 import pennant
 import requests
 
 from getpass import getuser
 from dotenv import load_dotenv
-from arglite import parser as cliarg
 
 from rich.table import Table
 from rich.console import Console
@@ -13,7 +14,7 @@ load_dotenv()
 
 def list():
 
-    allowed = ["item_name", "item_qty", "item_weight", "item_consumable"]
+    allowed = ["item_name", "item_qty", "item_bulk", "item_consumable"]
 
     api_request = requests.get(
         f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/inventory/list",
@@ -35,7 +36,18 @@ def list():
     Console().print(table)
 
 def acquire():
-    # TODO: Make wayyyyy more dynamic
+
+    arguments = sys.argv
+    if sys.argv[0].split("/")[-1] == "get":
+        return
+
+    filename = sys.argv[1]
+
+    with open(filename, "r") as fh:
+        data = fh.read()
+
+    program = data
+
     content = requests.post(
         f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/inventory/add/",
         data = {
@@ -48,3 +60,15 @@ def acquire():
             "item_bytestring": base64.b64encode(bytes(program, 'utf-8'))
         }
     )
+
+def drop():
+    content = requests.post(
+        f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/inventory/drop/",
+        data = {
+            "item_owner": 1,
+            "item_name": "Ticket",
+            "item_qty": 1
+        }
+    )
+    print(content.json())
+

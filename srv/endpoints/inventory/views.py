@@ -38,10 +38,12 @@ class AddInventoryView(APIView):
                 item_owner_id = request.data.get("item_owner"),
                 item_name = request.data.get("item_name")
             )
-            # Update quantity; TODO: need to figure out how to handle versioning
+            # Update quantity and space (bulk); TODO: need to figure out how to handle versioning
             qty = getattr(item, 'item_qty') + float(request.data.get('item_qty'))
             setattr(item, 'item_qty', qty)
+            # TODO: This is really a trigger?
             setattr(item, 'item_bulk', qty * getattr(item, 'item_weight'))
+            # Save modified item to database
             item.save()
             return HttpResponse(
                 status = 200
@@ -53,6 +55,7 @@ class AddInventoryView(APIView):
                     serializer.save()
                     return HttpResponse(status=status.HTTP_201_CREATED)
                 return HttpResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponse(status = 400)
 
 class DropInventoryView(APIView):
 
@@ -61,28 +64,20 @@ class DropInventoryView(APIView):
     def post(self, request, *args, **kwargs):
         logger.debug("DropInventoryView POST request data: %s", request.data)
         item_name = request.data.get('item_name')
+        item_owner = request.data.get('item_owner')
         if not item_name:
             return Response({"error": "Item name is required"}, status=status.HTTP_400_BAD_REQUEST)
+        if not item_owner:
+            return HttpResponse({"error": "Item owner ID requred"}, status = 400)
         try:
-            inventory_item = Inventory.objects.get(item_name=item_name)
+            inventory_item = Inventory.objects.get(
+                item_name = item_name,
+                item_owner_id = item_owner
+            )
             inventory_item.delete()
-            return Response({"message": "Item dropped"}, status=status.HTTP_200_OK)
+            return Response({"message": "Item dropped", "item": inventory_item.as_dict()}, status=status.HTTP_200_OK)
         except Inventory.DoesNotExist:
             return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
-
-class UpdateInventoryView(GenericAPIView, UpdateModelMixin):
-
-    queryset = Inventory.objects.all()
-    serializer_class = InventorySerializer
-
-    def patch(self, request, *args, **kwargs):
-        if not request.data.get('item_name'):
-            return HttpResponse(
-                json.dumps({"error": "Item name required."}),
-                status = 400,
-                content_type = "application/json"
-            )
-        return self.partial_update(request, *args, **kwargs)
 
 class ListInventoryView(APIView):
 
