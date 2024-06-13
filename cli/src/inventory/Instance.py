@@ -12,6 +12,7 @@ class Instance:
         self.valid = True
         self.__validate_file(filename)
         self.source = inspect.getsource(self.object)
+        self.binary = open(filename, "rb")
         self.__enumerate_properties()
 
     def __validate_file(self, filename: str = "") -> None:
@@ -37,16 +38,17 @@ class Instance:
         self.transmit = {
             "item_owner": os.getenv("CHARNAME"),
             "item_qty": 1,
-            "item_bytestring": base64.b64encode(bytes(self.source, "utf8"))
         }
         instance = self.mod()
         to_transmit = {
             "modname" : "item_name",
             "volume": "item_weight",
-            "consumable": "item_consumable"
+            "consumable": "item_consumable",
+            "version": "item_version"
         }
         # TODO: Fix for translation table above
         for prop in dir(instance):
+            value = getattr(instance, prop)
             if prop in to_transmit:
-                self.transmit[prop] = getattr(instance, prop)
-        print(self.transmit)
+                prop = to_transmit[prop]
+            self.transmit[prop] = value

@@ -33,6 +33,7 @@ schema_view = get_schema_view(
 class AddInventoryView(APIView):
 
     def post(self, request, *args, **kwargs):
+        print(dir(request))
         try:
             item_owner_record = omnipresence.models.OmnipresenceModel.objects.get(
                 charname = request.data.get('item_owner')
@@ -42,7 +43,7 @@ class AddInventoryView(APIView):
                 item_owner_id = item_owner_id,
                 item_name = request.data.get("item_name")
             )
-            if not created:
+            if not created: # In the case that the record exists; should be updated
                 # Update quantity and space (bulk); TODO: need to figure out how to handle versioning
                 qty = getattr(item, 'item_qty') + float(request.data.get('item_qty'))
                 setattr(item, 'item_qty', qty)

@@ -4,7 +4,7 @@ import sys
 class ItemSpec:
 
     volume = 1
-    version = 1
+    version = "1.0.0"
     actions = {}
     consumable = True
 

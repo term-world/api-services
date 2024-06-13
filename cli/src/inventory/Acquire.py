@@ -1,5 +1,6 @@
 import os
 import sys
+import base64
 import pennant
 import requests
 
@@ -16,14 +17,14 @@ class Acquisition:
         # Accommodate multiple files; acquire each serially
         for file in sys.argv[1:]:
             instance = Instance(file)
-        self.__transmit_to_api(instance)
+            self.__transmit_to_api(instance)
 
     def __transmit_to_api(self, instance: dict = {}) -> None:
         response = requests.post(
             f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/inventory/add/",
-            data = instance.transmit
+            data = instance.transmit,
+            files = {"upload_file": instance.binary}
         )
-        print(response.status_code)
 
 def cmd():
     # Validate correct use of function

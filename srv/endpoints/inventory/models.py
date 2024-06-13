@@ -27,6 +27,7 @@ class Inventory(models.Model):
     item_qty = models.FloatField(default=1.0)
     item_weight = models.FloatField(default=1.0)
     item_bulk = models.FloatField(default=1.0)
+    item_version = models.CharField(max_length = 255, default = "1.0.0")
     item_consumable = models.BooleanField(default = False)
     item_bytestring = models.BinaryField(default = b'\x08', editable = True)
 
