@@ -34,17 +34,22 @@ class AddInventoryView(APIView):
 
     def post(self, request, *args, **kwargs):
         try:
+            item_owner_record = omnipresence.models.OmnipresenceModel.objects.get(
+                charname = request.data.get('item_owner')
+            )
+            item_owner_id = getattr(item_owner_record, 'id')
             item, created = Inventory.objects.get_or_create(
-                item_owner_id = request.data.get("item_owner"),
+                item_owner_id = item_owner_id,
                 item_name = request.data.get("item_name")
             )
-            # Update quantity and space (bulk); TODO: need to figure out how to handle versioning
-            qty = getattr(item, 'item_qty') + float(request.data.get('item_qty'))
-            setattr(item, 'item_qty', qty)
-            # TODO: This is really a trigger?
-            setattr(item, 'item_bulk', qty * getattr(item, 'item_weight'))
-            # Save modified item to database
-            item.save()
+            if not created:
+                # Update quantity and space (bulk); TODO: need to figure out how to handle versioning
+                qty = getattr(item, 'item_qty') + float(request.data.get('item_qty'))
+                setattr(item, 'item_qty', qty)
+                # TODO: This is really a trigger?
+                setattr(item, 'item_bulk', qty * getattr(item, 'item_weight'))
+                # Save modified item to database
+                item.save()
             return HttpResponse(
                 status = 200
             )

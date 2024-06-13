@@ -10,6 +10,8 @@ class ItemSpec:
 
     def __init__(self, filename):
         self.filename = filename
+        self.modname = filename.split(".")[0]
+        self.modname = self.modname.split("/")[-1]
         self.__set_cli_flags()
 
     def __set_cli_flags(self):
