@@ -108,3 +108,21 @@ class ListInventoryView(APIView):
             status=status.HTTP_200_OK,
             content_type = 'application/json'
         )
+
+class SearchInventoryView(APIView):
+
+    def post(self, request, *args, **kwargs):
+        item_owner_record = omnipresence.models.OmnipresenceModel.objects.get(
+            charname = request.data.get('charname')
+        )
+        item = Inventory.objects.get(
+            item_owner_id = getattr(item_owner_record, "id"),
+            item_name = request.data.get('item_name')
+        )
+        response = item.as_dict()
+        del response['item_owner']
+        return HttpResponse(
+            json.dumps(response),
+            status = 200,
+            content_type = 'application/json'
+        )
