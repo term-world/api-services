@@ -70,7 +70,9 @@ class DropInventoryView(APIView):
     def post(self, request, *args, **kwargs):
         logger.debug("DropInventoryView POST request data: %s", request.data)
         item_name = request.data.get('item_name')
-        item_owner = request.data.get('item_owner')
+        item_owner_record = omnipresence.models.OmnipresenceModel.objects.get(
+            charname = request.data.get('item_owner')
+        )
         if not item_name:
             return Response({"error": "Item name is required"}, status=status.HTTP_400_BAD_REQUEST)
         if not item_owner:
@@ -80,7 +82,11 @@ class DropInventoryView(APIView):
                 item_name = item_name,
                 item_owner_id = item_owner
             )
-            inventory_item.delete()
+            qty = getattr(inventory_item, 'item_qty')
+            setattr(inventory_item, 'item_qty', qty - 1)
+            serializer = InventorySerializer(data = inventory_item)
+            if serializer.is_valid():
+                serializer.save()
             return Response({"message": "Item dropped", "item": inventory_item.as_dict()}, status=status.HTTP_200_OK)
         except Inventory.DoesNotExist:
             return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
