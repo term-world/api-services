@@ -13,6 +13,7 @@ class InventorySerializer(serializers.ModelSerializer):
     def validate_item_structure(self, item):
         try:
             # TODO: Rewrite validation with binary interpretation
+            pass
         except:
             # TODO: Raise individual exceptions for parts of the flow above?
             raise serializers.ValidationError(
