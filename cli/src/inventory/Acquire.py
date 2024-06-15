@@ -23,7 +23,7 @@ class Acquisition:
         response = requests.post(
             f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/inventory/add/",
             data = instance.transmit,
-            files = {"upload_file": instance.binary}
+            files = {"item_binary": instance.binary}
         )
 
 def cmd():

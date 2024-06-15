@@ -12,6 +12,8 @@ class Instance:
         self.valid = True
         self.__validate_file(filename)
         self.source = inspect.getsource(self.object)
+        #with open(filename, "rb") as fh:
+        #    self.binary = fh.read()
         self.binary = open(filename, "rb")
         self.__enumerate_properties()
 
