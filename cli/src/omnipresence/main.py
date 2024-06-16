@@ -43,7 +43,6 @@ def patch(data: dict = {}):
 
 def report():
     data = get()
-    print(data)
     if len(data) == 1:
         patch(data[0])
     if len(data) == 0:
