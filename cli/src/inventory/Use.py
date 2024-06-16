@@ -6,7 +6,6 @@ import requests
 import importlib
 
 from dotenv import load_dotenv
-from getpass import getuser
 from .Instance import Instance
 
 load_dotenv()
@@ -23,7 +22,7 @@ class Usage:
         item = requests.post(
             f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/inventory/search/",
             data = {
-                "charname": getuser(),
+                "charname": os.getenv('GITHUB_USER'),
                 "item_name": self.item_name
             }
         )
@@ -42,7 +41,7 @@ class Usage:
             f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/inventory/reduce/",
             data = {
                 "item_name": self.item_name,
-                "item_owner": getuser()
+                "item_owner": os.getenv('GITHUB_USER')
             }
         )
 
