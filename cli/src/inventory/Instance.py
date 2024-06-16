@@ -38,7 +38,7 @@ class Instance:
 
     def __enumerate_properties(self) -> None:
         self.transmit = {
-            "item_owner": os.getenv("CHARNAME"),
+            "item_owner": os.getenv("GITHUB_USER"),
             "item_qty": 1,
         }
         instance = self.mod()

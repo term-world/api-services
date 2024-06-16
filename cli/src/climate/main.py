@@ -29,16 +29,12 @@ def main():
     """Display the weather report."""
     # Define api_url and port variables
     api_url = os.getenv("API_URL")
-    api_port = os.getenv("PORT")
-
-    # If the API URL is localhost, append the port number
-    if "127.0.0.1" in api_url:
-        api_url = f"{api_url}:{api_port}"
+    api_port = os.getenv("API_PORT")
 
     # Sends a get request to the url and stores the response
     STATE = json.loads(
         requests.get(
-            f"{api_url}/v1/climate"
+            f"{api_url}:{api_port}/v1/climate"
         ).content
     )
 

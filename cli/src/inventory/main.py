@@ -4,7 +4,6 @@ import base64
 import pennant
 import requests
 
-from getpass import getuser
 from dotenv import load_dotenv
 
 from rich.table import Table
@@ -19,11 +18,11 @@ def list():
     api_request = requests.get(
         f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/inventory/list",
         params = {
-            "charname": getuser()
+            "charname": os.getenv('GITHUB_USER')
         }
     )
 
-    table = Table(title=f"{getuser()}'s inventory")
+    table = Table(title=f"{os.getenv('GITHUB_USER')}'s inventory")
     table.add_column("Item name")
     table.add_column("Item count")
     table.add_column("Space Occupied")
