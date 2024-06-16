@@ -38,15 +38,13 @@ class Usage:
         mod = types.ModuleType(self.item_name)
         exec(self.source, mod.__dict__)
         getattr(mod, self.item_name)().use()
-        status = requests.post(
-            f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/inventory/add/",
+        status = requests.patch(
+            f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/inventory/reduce/",
             data = {
                 "item_name": self.item_name,
-                "item_owner": getuser(),
-                "item_qty": -1
+                "item_owner": getuser()
             }
         )
-        print(status.status_code)
 
 def cmd():
     Usage(sys.argv[1])

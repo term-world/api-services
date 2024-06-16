@@ -63,6 +63,25 @@ class AddInventoryView(APIView):
                 return HttpResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return HttpResponse(status = 400)
 
+class ReduceInventoryView(GenericAPIView, UpdateModelMixin):
+
+    def patch(self, request, *args, **kwargs):
+        item_owner_record = omnipresence.models.OmnipresenceModel.objects.get(
+            charname = request.data.get('item_owner')
+        )
+        item = Inventory.objects.get(
+            item_owner_id = getattr(item_owner_record, "id"),
+            item_name = request.data.get('item_name')
+        )
+        if not getattr(item, 'item_consumable') and not request.data.get("item_drop"):
+            return HttpResponse(status = 200)
+        qty = getattr(item, 'item_qty') - 1
+        setattr(item, 'item_qty', qty)
+        # TODO: This is really a trigger?
+        setattr(item, 'item_bulk', qty * getattr(item, 'item_weight'))
+        item.save()
+        return HttpResponse(status = 200)
+
 class DropInventoryView(APIView):
 
     # TODO: Potentially also a patch request?
@@ -70,6 +89,8 @@ class DropInventoryView(APIView):
     def post(self, request, *args, **kwargs):
         logger.debug("DropInventoryView POST request data: %s", request.data)
         item_name = request.data.get('item_name')
+        # TODO: Theoretically, as a foreign key, we should be able to page through
+        #       inventory objects by name and read the foreign key data? Revisit.
         item_owner_record = omnipresence.models.OmnipresenceModel.objects.get(
             charname = request.data.get('item_owner')
         )
