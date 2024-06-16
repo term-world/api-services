@@ -30,7 +30,7 @@ def post():
 
 def patch(data: dict = {}):
     response = requests.patch(
-        f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/omnipresence/update/{data['pk']}",
+        f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/omnipresence/update/{data['pk']}/",
         data = {
             "charname": data['charname'],
             "working_dir": os.getcwd(),
