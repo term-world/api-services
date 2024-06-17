@@ -65,7 +65,8 @@ class ReduceInventoryView(GenericAPIView, UpdateModelMixin):
             item_owner_id = getattr(item_owner_record, "id"),
             item_name = request.data.get('item_name')
         )
-        if not getattr(item, 'item_consumable') and not request.data.get("item_drop"):
+        is_drop_request = request.data.get('item_drop') or False
+        if getattr(item, 'item_consumable') == False and not is_drop_request:
             return HttpResponse(status = 200)
         qty = getattr(item, 'item_qty') - 1
         setattr(item, 'item_qty', qty)
