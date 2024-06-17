@@ -23,8 +23,10 @@ class ItemSpec:
             arg = arg.replace("-","")
             setattr(self, arg, val)
 
-    def __info(self) -> str:
-        return """"""
+    def __str__(self) -> str:
+        return f"""
+This particular {self.modname} isn't that special.
+        """
 
     def use(self, **kwargs) -> None:
         print(f"You try the {self.__module__}, but it doesn't do anything.")
