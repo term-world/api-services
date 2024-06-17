@@ -15,6 +15,9 @@ class Usage:
     def __init__(self, item_name):
         self.item_name = item_name
         item_record = self.__search_inventory()
+        if not item_record:
+            print(f"ERROR: You don't seem to have any {item_name}!")
+            sys.exit(1)
         self.__decode_item_file(item_record)
         self.__use_item()
 
@@ -26,7 +29,9 @@ class Usage:
                 "item_name": self.item_name
             }
         )
-        return item.json()
+        if item.status_code == 200:
+            return item.json()
+        return {}
 
     def __decode_item_file(self, item_record: dict = {}) -> None:
         self.source = bytes.fromhex(
