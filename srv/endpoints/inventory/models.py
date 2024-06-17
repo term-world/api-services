@@ -6,7 +6,7 @@ from django.db import models
         name='decrement_item_qty_trigger',
         level=pgtrigger.Row,
         operation=pgtrigger.Update,
-        when=pgtrigger.Before,
+        when=pgtrigger.After,
         func="""
             BEGIN
                 IF NEW.item_qty = 0 THEN
