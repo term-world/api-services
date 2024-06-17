@@ -138,6 +138,10 @@ class SearchInventoryView(APIView):
             item_owner_id = getattr(item_owner_record, "id"),
             item_name = request.data.get('item_name')
         )
+        if not item:
+            return HttpResponse(
+                status = 404
+            )
         response = item.as_dict()
         del response['item_owner']
         response["item_bytestring"] = response['item_bytestring'].hex()
