@@ -193,7 +193,7 @@ class GiveInventoryView(GenericAPIView, UpdateModelMixin):
             item_owner_id = getattr(item_receiver_record, 'id'),
             item_name = item_name
         )
-        print(created)
+        print(given_item, created)
         # Set some sensible baselines for quanitity and bulk
         qty = 1
         weight = getattr(item, 'item_weight')
