@@ -180,14 +180,15 @@ class GiveInventoryView(GenericAPIView, UpdateModelMixin):
             return HttpResponse(
                 status = 404
             )
-        # Convert to dictionary for external manipulation
+        # Convert to dictionary to separate from original instance
         item_params = item.as_dict()
         del item_params['id'] # Delete the giver's object ID
         # Transfer owner ID
         item_params['item_owner_id'] = getattr(item_receiver_record, 'id')
         # Get or create; do we necessarily need to issue a search in receiver's
         # inventory first? Probably.
-        # TODO: Consider what happens if they're not the same binary
+        # TODO: Consider what happens if they're not the same binary; probably
+        #       reject
         given_item, created = Inventory.objects.get_or_create(
             item_owner_id = getattr(item_receiver_record, 'id'),
             item_name = item_name
@@ -196,8 +197,10 @@ class GiveInventoryView(GenericAPIView, UpdateModelMixin):
         if not created: # Some amount already existed in receiver's inventory
             qty = getattr(given_item, 'item_qty') + 1
             item_params['item_qty'] = qty
-        for param in item_params:
-            setattr(given_item, param, item_params[param])
+        else:
+            # In the case that the item is created, let's set up the whole record
+            for param in item_params:
+                setattr(given_item, param, item_params[param])
         given_item.save()
         # Update original item from giver's inventory to reflect new amounts, bulk
         setattr(item, 'item_qty', getattr(item, 'item_qty') - qty)
