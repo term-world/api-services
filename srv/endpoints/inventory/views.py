@@ -176,12 +176,12 @@ class GiveInventoryView(GenericAPIView, UpdateModelMixin):
             return HttpResponse(
                 status = 404
             )
-        item = item.as_dict()
-        item['item_owner_id'] = getattr(item_receiver_record, 'id')
+        item_params = item.as_dict()
+        item_params['item_owner_id'] = getattr(item_receiver_record, 'id')
         # TODO: Figure up a way to _not_ reproduce logic from other views?
         # TODO: Figure up a way to allow transfer of more than 1-at-a-time
         given_item, created = Inventory.objects.get_or_create(
-            **item
+            **item_params
         )
         qty = 1
         if not created: # Some amount already existed in receiver's inventory
@@ -189,6 +189,8 @@ class GiveInventoryView(GenericAPIView, UpdateModelMixin):
             setattr(given_item, 'item_qty', qty + 1)
         setattr(given_item, 'item_qty', qty)
         given_item.save()
+        setattr(item, 'item_qty', getattr(item, 'item_qty') - qty)
+        item.save()
         return HttpResponse(
             status = 200
         )
