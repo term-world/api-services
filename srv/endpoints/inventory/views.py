@@ -193,11 +193,11 @@ class GiveInventoryView(GenericAPIView, UpdateModelMixin):
             item_owner_id = getattr(item_receiver_record, 'id'),
             item_name = item_name
         )
+        print(given_item)
         # Set some sensible baselines for quanitity and bulk
         qty = 1
         weight = getattr(item, 'item_weight')
         if not created: # Some amount already existed in receiver's inventory
-            print(qty)
             qty = getattr(given_item, 'item_qty') + 1
         # Set properties of given record to reflect actual amounts, bulk
         # TODO: Reject if amount given is greater than space available -- this is a trigger
@@ -209,7 +209,7 @@ class GiveInventoryView(GenericAPIView, UpdateModelMixin):
                 setattr(given_item, param, item_params[param])
         given_item.save()
         # Update original item from giver's inventory to reflect new amounts, bulk
-        setattr(item, 'item_qty', getattr(item, 'item_qty') - qty)
+        setattr(item, 'item_qty', getattr(item, 'item_qty') - 1)
         setattr(item, 'item_bulk', getattr(item, 'item_qty') * getattr(item, 'item_weight'))
         item.save()
         # Return successful transaction status; TODO: Add a message for both giver and receiver?
