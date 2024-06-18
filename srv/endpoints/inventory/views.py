@@ -190,8 +190,10 @@ class GiveInventoryView(GenericAPIView, UpdateModelMixin):
             qty = getattr(given_item, 'item_qty')
             setattr(given_item, 'item_qty', qty + 1)
         setattr(given_item, 'item_qty', qty)
+        setattr(given_item, 'item_bulk', qty * getattr(given_item, 'item_weight'))
         given_item.save()
         setattr(item, 'item_qty', getattr(item, 'item_qty') - qty)
+        setattr(item, 'item_bulk', getattr(item, 'item_qty') * getattr(item, 'item_weight'))
         item.save()
         return HttpResponse(
             status = 200
