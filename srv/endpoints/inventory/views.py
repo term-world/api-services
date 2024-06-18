@@ -193,13 +193,15 @@ class GiveInventoryView(GenericAPIView, UpdateModelMixin):
             item_owner_id = getattr(item_receiver_record, 'id'),
             item_name = item_name
         )
+        # Set some sensible baselines for quanitity and bulk
         qty = 1
+        weight = getattr(item, 'item_weight')
         if not created: # Some amount already existed in receiver's inventory
             qty = getattr(given_item, 'item_qty') + 1
         # Set properties of given record to reflect actual amounts, bulk
         # TODO: Reject if amount given is greater than space available -- this is a trigger
         item_params['item_qty'] = qty
-        item_params['item_weight'] = qty * item_params['item_weight']
+        item_params['item_bulk'] = qty * weight
         if created:
             # In the case that the item is created, let's set up the whole record
             for param in item_params:
