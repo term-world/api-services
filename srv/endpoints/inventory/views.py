@@ -201,6 +201,7 @@ class GiveInventoryView(GenericAPIView, UpdateModelMixin):
             qty = getattr(given_item, 'item_qty') + 1
         # Set properties of given record to reflect actual amounts, bulk
         # TODO: Reject if amount given is greater than space available -- this is a trigger
+        print(qty)
         item_params['item_qty'] = qty
         item_params['item_bulk'] = qty * weight
         if created:
