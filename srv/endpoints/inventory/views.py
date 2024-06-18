@@ -151,3 +151,42 @@ class SearchInventoryView(APIView):
             status = 200,
             content_type = 'application/json'
         )
+
+class GiveInventoryView(GenericAPIView, UpdateModelMixin):
+
+    def patch(self, request, to_charname, *args, **kwargs):
+        item_name = request.data.get('item_name')
+        try:
+            item_owner_record = omnipresence.models.OmnipresenceModel.objects.get(
+                charname = request.data.get('charname')
+            )
+            item_given_record = omnipresence.models.OmnipresenceModel.objects.get(
+                charname = to_charname
+            )
+        except OmnipresenceModel.DoesNotExist:
+            return HttpResponse(
+                status = 400
+            )
+        item = Inventory.objects.get(
+            item_owner_id = getattr(item_owner_record, "id"),
+            item_name = request.data.get('item_name')
+        )
+        if not item:
+            return HttpResponse(
+                status = 404
+            )
+        # TODO: Figure up a way to _not_ reproduce logic from other views?
+        # TODO: Figure up a way to allow transfer of more than 1-at-a-time
+        given_item, created = Inventory.objects.get_or_create(
+            item_owner_id = getattr(item_given_record, 'id'),
+            item_name = request.data.get("item_name")
+        )
+        qty = 1
+        if not created:
+            qty = getattr(given_iten, 'item_qty')
+            setattr(given_item, 'item_qty', qty + 1)
+        setattr(given_item, 'item_qty', qty)
+        given_item.save()
+        return HttpResponse(
+            status = 200
+        )

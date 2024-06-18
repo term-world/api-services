@@ -12,14 +12,17 @@ load_dotenv()
 
 class Usage:
 
-    def __init__(self, item_name):
+    def __init__(self, item_name: str = "", to_use: bool = True):
         self.item_name = item_name
         item_record = self.__search_inventory()
         if not item_record:
             print(f"ERROR: You don't seem to have any {item_name}!")
             sys.exit(1)
         self.__decode_item_file(item_record)
-        self.__use_item()
+        if to_use:
+            self.__use_item()
+        else:
+            self.__get_info()
 
     def __search_inventory(self, item_name: str = "") -> dict:
         item = requests.post(
@@ -50,6 +53,13 @@ class Usage:
             }
         )
 
-def cmd():
-    Usage(sys.argv[1])
+    def __get_info(self):
+        mod = types.ModuleType(self.item_name)
+        exec(self.source, mod.__dict__)
+        print(f"You look at {self.item_name}. {getattr(mod, self.item_name)()}")
 
+def cmd_use():
+    Usage(item_name = sys.argv[1])
+
+def cmd_info():
+    Usage(item_name = sys.argv[1], to_use = False)
