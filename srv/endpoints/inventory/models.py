@@ -14,7 +14,7 @@ from django.db import models
                     WHERE id = OLD.id;
                 ELSE
                     UPDATE inventory_inventory
-                    SET NEW.item_bulk = NEW.item_qty * item_weight
+                    SET item_bulk = NEW.item_qty * item_weight
                     WHERE id = OLD.id;
                 END IF;
                 RETURN NEW;
