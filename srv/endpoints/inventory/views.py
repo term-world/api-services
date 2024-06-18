@@ -41,6 +41,7 @@ class AddInventoryView(APIView):
             item_owner_id = item_owner_id,
             item_name = request.data.get("item_name")
         )
+        setattr(item, 'item_consumable', request.data.get('item_consumable'))
         setattr(item, 'item_bytestring', request.FILES['item_binary'].read())
         if not created: # In the case that the record exists; should be updated
             # Update quantity and space (bulk); TODO: need to figure out how to handle versioning
@@ -78,6 +79,7 @@ class ReduceInventoryView(GenericAPIView, UpdateModelMixin):
 class DropInventoryView(APIView):
 
     # TODO: Potentially also a patch request?
+    # Super TODO: Can we drop this view altogether?
 
     def post(self, request, *args, **kwargs):
         logger.debug("DropInventoryView POST request data: %s", request.data)
@@ -150,4 +152,46 @@ class SearchInventoryView(APIView):
             json.dumps(response),
             status = 200,
             content_type = 'application/json'
+        )
+
+class GiveInventoryView(GenericAPIView, UpdateModelMixin):
+
+    def patch(self, request, to_charname, *args, **kwargs):
+        item_name = request.data.get('item_name')
+        try:
+            item_owner_record = omnipresence.models.OmnipresenceModel.objects.get(
+                charname = request.data.get('charname')
+            )
+            item_receiver_record = omnipresence.models.OmnipresenceModel.objects.get(
+                charname = to_charname
+            )
+        except OmnipresenceModel.DoesNotExist:
+            return HttpResponse(
+                status = 400
+            )
+        item = Inventory.objects.get(
+            item_owner_id = getattr(item_owner_record, "id"),
+            item_name = request.data.get('item_name')
+        )
+        if not item:
+            return HttpResponse(
+                status = 404
+            )
+        item_params = item.as_dict()
+        item_params['item_owner_id'] = getattr(item_receiver_record, 'id')
+        # TODO: Figure up a way to _not_ reproduce logic from other views?
+        # TODO: Figure up a way to allow transfer of more than 1-at-a-time
+        given_item, created = Inventory.objects.get_or_create(
+            **item_params
+        )
+        qty = 1
+        if not created: # Some amount already existed in receiver's inventory
+            qty = getattr(given_item, 'item_qty')
+            setattr(given_item, 'item_qty', qty + 1)
+        setattr(given_item, 'item_qty', qty)
+        given_item.save()
+        setattr(item, 'item_qty', getattr(item, 'item_qty') - qty)
+        item.save()
+        return HttpResponse(
+            status = 200
         )
