@@ -171,13 +171,14 @@ class GiveInventoryView(GenericAPIView, UpdateModelMixin):
             )
         item = Inventory.objects.get(
             item_owner_id = getattr(item_owner_record, "id"),
-            item_name = request.data.get('item_name')
+            item_name = item_name
         )
         if not item:
             return HttpResponse(
                 status = 404
             )
         item_params = item.as_dict()
+        del item_params['id']
         item_params['item_owner_id'] = getattr(item_receiver_record, 'id')
         # TODO: Figure up a way to _not_ reproduce logic from other views?
         # TODO: Figure up a way to allow transfer of more than 1-at-a-time

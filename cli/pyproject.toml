@@ -8,7 +8,7 @@ version = "0.1.0"
 dependencies = [
     "arglite",
     "pennant",
-    "openai",
+    "pyyaml",
     "python-dotenv",
     "requests",
     "rich"
@@ -22,6 +22,7 @@ presence = "omnipresence:main.report"
 inventory = "inventory:main.list"
 get = "inventory:Acquire.cmd"
 use = "inventory:Use.cmd_use"
+give = "inventory:Give.cmd"
 info = "inventory:Use.cmd_info"
 drop = "inventory:Drop.cmd"
 climate = "climate:main.main"

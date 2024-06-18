@@ -11,8 +11,6 @@ from .Instance import Instance
 
 load_dotenv()
 
-n = narrator.Narrator()
-
 class Give:
 
     def __init__(self, item_name, item_receiver):
@@ -37,22 +35,23 @@ class Give:
         return {}
 
     def __confirm_transfer(self) -> bool:
-        q = Narrator.Question({
-            "question": f"Give {self.item_name} to {self.item_receiver}?"),
+        # TODO: Could substitute with YesNoQuestion (from narrator)
+        q = narrator.Question({
+            "question": f"Give {self.item_name} to {self.item_receiver}?",
             "responses": [
-                {"choice": "Yes", "outcome": True},
-                {"choice": "No": "outcome": False)
+                {"choice": "yes", "outcome": True},
+                {"choice": "no", "outcome": False}
             ]
         })
         return q.ask()
 
-    def __give_item(item_record) -> None:
+    def __give_item(self, item_record) -> None:
         response = self.__confirm_transfer()
         if not response:
             print("Transfer cancelled.")
             sys.exit(0)
         result = requests.patch(
-            f"{os.getenv('API_URL')}:{os.getenv('API_PORT'}}/v1/inventory/give/{self.item_receiver}",
+            f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/inventory/transfer/{self.item_receiver}",
             data = {
                 "charname": os.getenv('GITHUB_USER'),
                 "item_name": self.item_name
@@ -65,4 +64,4 @@ class Give:
         sys.exit(1)
 
 def cmd():
-    Give(sys.argv[1:2])
+    Give(*sys.argv[1:3])
