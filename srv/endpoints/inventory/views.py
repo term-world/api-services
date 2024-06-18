@@ -158,6 +158,7 @@ class GiveInventoryView(GenericAPIView, UpdateModelMixin):
 
     def patch(self, request, to_charname, *args, **kwargs):
         item_name = request.data.get('item_name')
+        # Retrieve the two parties' information
         try:
             item_owner_record = omnipresence.models.OmnipresenceModel.objects.get(
                 charname = request.data.get('charname')
@@ -169,32 +170,40 @@ class GiveInventoryView(GenericAPIView, UpdateModelMixin):
             return HttpResponse(
                 status = 400
             )
+        # Get the item given from owner's inventory
         item = Inventory.objects.get(
             item_owner_id = getattr(item_owner_record, "id"),
             item_name = item_name
         )
+        # If nothing, let's cause a ruckus
         if not item:
             return HttpResponse(
                 status = 404
             )
+        # Convert to dictionary for external manipulation
         item_params = item.as_dict()
-        del item_params['id']
+        del item_params['id'] # Delete the giver's object ID
+        # Transfer owner ID
         item_params['item_owner_id'] = getattr(item_receiver_record, 'id')
-        # TODO: Figure up a way to _not_ reproduce logic from other views?
-        # TODO: Figure up a way to allow transfer of more than 1-at-a-time
+        # Get or create; do we necessarily need to issue a search in receiver's
+        # inventory first? Probably.
+        # TODO: Consider what happens if they're not the same binary
         given_item, created = Inventory.objects.get_or_create(
-            **item_params
+            item_owner_id = getattr(item_receiver_record, 'id'),
+            item_name = item_name
         )
         qty = 1
         if not created: # Some amount already existed in receiver's inventory
-            qty = getattr(given_item, 'item_qty')
-            setattr(given_item, 'item_qty', qty + 1)
-        setattr(given_item, 'item_qty', qty)
-        setattr(given_item, 'item_bulk', qty * getattr(given_item, 'item_weight'))
+            qty = getattr(given_item, 'item_qty') + 1
+            item_params['item_qty'] = qty
+        for param in item_params:
+            setattr(given_item, param, item_params[param])
         given_item.save()
+        # Update original item from giver's inventory to reflect new amounts, bulk
         setattr(item, 'item_qty', getattr(item, 'item_qty') - qty)
         setattr(item, 'item_bulk', getattr(item, 'item_qty') * getattr(item, 'item_weight'))
         item.save()
+        # Return successful transaction status; TODO: Add a message for both giver and receiver?
         return HttpResponse(
             status = 200
         )
