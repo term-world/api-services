@@ -41,6 +41,7 @@ class AddInventoryView(APIView):
             item_owner_id = item_owner_id,
             item_name = request.data.get("item_name")
         )
+        setattr(item, 'item_consumable', request.data.get('item_consumable'))
         setattr(item, 'item_bytestring', request.FILES['item_binary'].read())
         if not created: # In the case that the record exists; should be updated
             # Update quantity and space (bulk); TODO: need to figure out how to handle versioning
