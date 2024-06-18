@@ -10,7 +10,12 @@ from django.db import models
         func="""
             BEGIN
                 IF NEW.item_qty = 0 THEN
-                    DELETE FROM inventory_inventory WHERE id = OLD.id;
+                    DELETE FROM inventory_inventory
+                    WHERE id = OLD.id;
+                ELSE
+                    UPDATE inventory_inventory
+                    SET NEW.item_bulk = NEW.item_qty * item_weight
+                    WHERE id = OLD.id;
                 END IF;
                 RETURN NEW;
             END;
