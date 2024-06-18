@@ -197,7 +197,7 @@ class GiveInventoryView(GenericAPIView, UpdateModelMixin):
         if not created: # Some amount already existed in receiver's inventory
             qty = getattr(given_item, 'item_qty') + 1
         item_params['item_qty'] = qty
-        else:
+        if created:
             # In the case that the item is created, let's set up the whole record
             for param in item_params:
                 setattr(given_item, param, item_params[param])
