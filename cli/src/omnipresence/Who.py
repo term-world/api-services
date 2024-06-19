@@ -13,12 +13,13 @@ class Who:
         self.user = os.getenv('GITHUB_USER')
         user_list = self.__get_user_list()
 
-    def __get_user_list():
+    def __get_user_list(self):
         actives = requests.post(
-            f"{os.getenv('API_HOST'):{os.getenv('API_PORT')}/v1/omnipresence/",
+            f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/omnipresence/local/",
             data = {
                 "cwd": self.cwd
             }
+        )
         print(actives.json())
 
 def cmd():
