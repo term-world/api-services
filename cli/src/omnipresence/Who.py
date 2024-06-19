@@ -20,7 +20,7 @@ class Who:
                 "cwd": self.cwd
             }
         )
-        print(actives.json())
+        return actives.json()
 
 def cmd():
     Who()
