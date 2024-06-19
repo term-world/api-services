@@ -52,6 +52,16 @@ class OmnipresenceActiveView(GenericAPIView):
             content_type = 'application/json'
         )
 
+    def post(self, request, *args, **kwargs):
+        local_actives = OmnipresenceModel.objects.filter(
+            working_dir = request.data.get('cwd')
+        )
+        return HttpResponse(
+            json.dumps(list(local_actives)),
+            status = 200,
+            content_type = 'application/json'
+        )
+
 class OmnipresenceUpdateView(GenericAPIView, UpdateModelMixin):
 
     queryset = OmnipresenceModel.objects.all()
