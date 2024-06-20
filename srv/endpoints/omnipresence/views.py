@@ -55,7 +55,7 @@ class OmnipresenceActiveView(GenericAPIView):
     def post(self, request, *args, **kwargs):
         local_actives = OmnipresenceModel.objects.filter(
             working_dir = request.data.get('cwd')
-        )
+        ).values('charname')
         return HttpResponse(
             json.dumps(list(local_actives)),
             status = 200,
