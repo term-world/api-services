@@ -26,12 +26,13 @@ class Who:
         )
         return actives.json()
 
-    def __display_user_list(self, user_list: list = []):
+    def __display_user_list(self, user_list: list = []) -> None:
         console = Console()
         if len(user_list) > 0:
-            users_fmt = [f"`🧙 {user['username']}`" for user in user_list]
+            users_fmt = [f"`🧙 {user['charname']}`" for user in user_list]
             markdown = f"> Users active in **{os.getcwd()}**: {', '.join(users_fmt)}"
             console.print(Markdown(markdown))
+            return
         console.print(Markdown(">  It appears that you are alone..."))
 
 def cmd():
