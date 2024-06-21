@@ -76,7 +76,7 @@ class PersonaSearchView(APIView):
 
     def get(self, request, persona_name, *args, **kwargs):
         try:
-            persona, created = PersonaModel.objects.get(
+            person = PersonaModel.objects.get(
                 assistant_name = persona_name
             )
             return HttpResponse(status = 200)
