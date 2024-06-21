@@ -6,16 +6,24 @@ import importlib
 from rich.console import Console
 from rich.markdown import Markdown
 
+class NotAnEgo(Exception):
+
+    pass
+
 class Talk:
 
     def __init__(self, persona: str = ""):
         try:
             mod = types.ModuleType(persona)
             with open(persona, "r") as fh:
-             data = fh.read()
+                data = fh.read()
             exec(data, mod.__dict__)
             getattr(mod, persona)()
-        except:
+        except NotAnEgo:
+            console = Console()
+            console.print(Markdown(f"> But {persona} isn't sentient!"))
+        except Exception as e:
+            print(e)
             console = Console()
             block = f"> You try to talk to {persona}, but they're not here!"
             console.print(
