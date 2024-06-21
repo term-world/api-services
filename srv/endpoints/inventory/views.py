@@ -14,6 +14,7 @@ from .serializers import InventorySerializer
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
+from django.db.utils import InternalError as PostgresException
 
 # Set up the logger
 logger = logging.getLogger(__name__)
@@ -50,7 +51,13 @@ class AddInventoryView(APIView):
             # TODO: This is really a trigger?
             setattr(item, 'item_bulk', qty * getattr(item, 'item_weight'))
             # Save modified item to database
-        item.save()
+        try:
+            item.save()
+        except PostgresException as e:
+            return HttpResponse(
+                json.dumps({'error': 'You are overburdened! Remove items from your inventory.'}),
+                status = 409
+            )
         return HttpResponse(
             status = 200
         )

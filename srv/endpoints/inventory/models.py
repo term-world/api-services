@@ -16,6 +16,23 @@ from django.db import models
                 RETURN NEW;
             END;
         """
+    ),
+    pgtrigger.Trigger(
+        name='detect_inventory_overburden',
+        level=pgtrigger.Row,
+        operation=pgtrigger.Update,
+        when=pgtrigger.After,
+        func="""
+            DECLARE
+                volume int;
+            BEGIN
+                volume := NEW.item_weight + (SELECT SUM(item_bulk) FROM inventory_inventory WHERE item_owner_id = NEW.item_owner_id);
+                IF volume > 11 THEN
+                    RAISE EXCEPTION 'overburdened';
+                END IF;
+                RETURN NEW;
+            END;
+        """
     )
 )
 class Inventory(models.Model):

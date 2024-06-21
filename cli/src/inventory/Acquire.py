@@ -25,6 +25,9 @@ class Acquisition:
             data = instance.transmit,
             files = {"item_binary": instance.binary}
         )
+        if response.status_code == 409:
+            context = response.json()
+            print(context['error'])
 
 def cmd():
     # Validate correct use of function
