@@ -104,7 +104,7 @@ class PersonaCreateView(APIView):
                 status = 400
             )
         try:
-            creator = OmnipreseceModel.objects.get(
+            creator = OmnipresenceModel.objects.get(
                 charname = persona_creator
             )
         except OmnipresenceModel.DoesNotExist:
