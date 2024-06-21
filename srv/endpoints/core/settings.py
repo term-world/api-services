@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     'core',
     'climate',
     'inventory',
-    'omnipresence'
+    'omnipresence',
+    'persona'
 ]
 
 MIDDLEWARE = [

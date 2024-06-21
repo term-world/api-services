@@ -11,6 +11,7 @@ dependencies = [
     "psycopg2-binary",
     "python-dotenv",
     "pennant",
+    "openai",
     "django",
     "django-pgtrigger",
     "django_rest_swagger",
