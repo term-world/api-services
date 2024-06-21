@@ -98,7 +98,7 @@ class PersonaCreateView(APIView):
         persona, created = PersonaModel.objects.get_or_create(
             assistant_name = name
         )
-        if created:
+        if not created:
             return HttpResponse(
                 json.dumps({"response": "Assistant with that name already exists!"}),
                 status = 400
