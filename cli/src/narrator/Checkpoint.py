@@ -20,10 +20,10 @@ def set_flag(flag: str, val:int = 1) -> None:
   if not exists([os.path.expanduser(f"{root_dir}/.flags")]):
     with open(f"{root_dir}/.flags", "w+") as fh:
       fh.write("{}")
-  with open(f"{os.getenv('root_dir')}/.flags", "r+") as fh:
+  with open(f"{root_dir}/.flags", "r+") as fh:
     flags = json.load(fh)
   flags[flag] = val
-  with open(f"{os.getenv('root_dir')}/.flags", "w") as fh:
+  with open(f"{root_dir}/.flags", "w") as fh:
     json.dump(flags, fh, indent=2)
 
 def check_flag(flag: str):
