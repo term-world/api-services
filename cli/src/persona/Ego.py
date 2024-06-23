@@ -11,7 +11,7 @@ load_dotenv()
 
 class Ego:
 
-    def __init__(self, type: str = "", name: str = ""):
+    def __init__(self, type: str = "", name: str = "", mode = "talk"):
         self.addressee = os.getenv('GITHUB_USER')
         self.archetype = type
         self.named = name or type
@@ -19,9 +19,9 @@ class Ego:
         is_registered = requests.get(
             f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/persona/search/{type}"
         )
-        if is_registered.status_code == 200:
+        if is_registered.status_code == 200 and mode == "talk":
             self.behave()
-        print(f"{self.named or self.archetype} doesn't seem to be around anywhere...")
+            sys.exit(0)
 
     def __str__(self):
         reference = self.named or self.archetype
