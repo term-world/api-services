@@ -23,6 +23,7 @@ class Look:
             console.print(Markdown(f"> {cls(mode = 'look')}"))
         except FileNotFoundError:
             console.print(Markdown(f"> {self.filename} doesn't seem to be present at the moment..."))
+        print()
 
 def cmd():
     sys.path.append(os.path.expanduser(os.getcwd()))
