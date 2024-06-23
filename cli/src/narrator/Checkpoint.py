@@ -4,7 +4,7 @@ import json
 from dotenv import load_dotenv
 
 load_dotenv()
-print(os.environ)
+
 root_dir = os.path.expanduser(os.getenv('FILE_SYSTEM') + os.getenv('RepositoryName'))
 
 from .Path import *
