@@ -31,14 +31,19 @@ class Ego:
         content = requests.post(
             f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/persona/generate/{self.archetype}",
             data = {
-                "charname": "dluman",
+                "charname": os.getenv('GITHUB_USER'),
                 "message": msg
             },
             stream = True
         )
-        console.print(Markdown("> " + content.text))
+        # formatted = self.__fmt_blockquotes(content.text)
+        console.print(Markdown(content.text))
         if msg.lower() == "goodbye":
             sys.exit(0)
+
+    def __fmt_blockquotes(self, text: str = ""):
+        paras = text.split("\n\n")
+        return ''.join(["\n> " + para for para in paras])
 
     def behave(self):
         console = Console()
