@@ -6,9 +6,7 @@ import importlib
 from rich.console import Console
 from rich.markdown import Markdown
 
-class NotAnEgo(Exception):
-
-    pass
+from .Errors import NotHereError, NotAnEgo
 
 class Talk:
 

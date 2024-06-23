@@ -72,6 +72,51 @@ class StreamPersonaGenerateView(APIView):
         stream['Cache-Control'] = 'no-cache'
         return stream
 
+class SyncPersonaGenerateView(APIView):
+
+    def post(self, request, persona_name, *args, **kwargs):
+        assistant_id = None
+        interactor = OmnipresenceModel.objects.get(
+            charname = request.data.get('charname')
+        )
+        try:
+            assistant = PersonaModel.objects.get(
+                assistant_name = persona_name
+            )
+        except PersonaModel.DoesNotExist:
+            return HttpResponse(status = 400)
+        interaction, created = PersonaThreadModel.objects.get_or_create(
+            thread_owner = interactor,
+            assistant_id = assistant
+        )
+        if created:
+            thread = client.beta.threads.create()
+            setattr(interaction, 'thread_id', thread.id)
+            interaction.save()
+        thread_id = getattr(interaction, 'thread_id')
+        message = client.beta.threads.messages.create(
+            thread_id = thread_id,
+            role="user",
+            content= request.data.get('message')
+        )
+        run = client.beta.threads.runs.create_and_poll(
+            thread_id = thread_id,
+            assistant_id = getattr(assistant, 'assistant_id')
+        )
+        while run.status != 'completed':
+            pass
+        print(run)
+        response = client.beta.threads.messages.list(
+            thread_id = thread_id,
+            limit = 1,
+            order = "desc"
+        )
+        latest = response.data[0].content[0].text.value
+        return HttpResponse(
+            latest,
+            status = 200
+        )
+
 class PersonaSearchView(APIView):
 
     def get(self, request, persona_name, *args, **kwargs):

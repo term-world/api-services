@@ -20,6 +20,7 @@ description = "Client-sided API interaction installed to Codespaces container."
 [project.scripts]
 who = "omnipresence:Who.cmd"
 talk = "persona:Talk.cmd"
+look = "persona:Look.cmd"
 presence = "omnipresence:main.report"
 inventory = "inventory:main.list"
 get = "inventory:Acquire.cmd"
