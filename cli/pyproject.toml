@@ -9,6 +9,7 @@ dependencies = [
     "arglite",
     "pennant",
     "pyyaml",
+    "fake-useragent",
     "python-dotenv",
     "requests",
     "rich"
