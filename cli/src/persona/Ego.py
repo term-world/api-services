@@ -46,12 +46,9 @@ class Ego:
             sys.exit(0)
 
     def handle_python_code(self, response_text: str):
-        # Extract the Python code snippet
         start = response_text.find("```python") + len("```python")
         end = response_text.find("```", start)
         python_code = response_text[start:end].strip()
-
-        # Determine the filename by backtracking from ".py"
         filename_end = response_text.find(".py") + 3
         if filename_end != -1:
             filename_start = filename_end
@@ -59,10 +56,9 @@ class Ego:
                 filename_start -= 1
             filename = response_text[filename_start:filename_end].strip()
         else:
-            filename = "extracted_code.py"
+            None
 
         if filename:
-            # Save the extracted Python code to the file
             with open(filename, "w") as file:
                 file.write(python_code)
             full_path = os.path.abspath(filename)
