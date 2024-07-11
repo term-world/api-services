@@ -120,7 +120,7 @@ class SyncPersonaGenerateView(APIView):
         )
         latest = response.data[0].content[0].text.value
         print(response)
-        files = None
+        file_uri = None
         try:
             files = response.data[0].content[0].text.annotations
             for file in files:
@@ -128,13 +128,13 @@ class SyncPersonaGenerateView(APIView):
                 fh = client.beta.assistants.retrieve(
                     getattr(assistant, 'assistant_id')
                 )
-                print(dir(fh))
+                file_uri = file.file_citation.file_id
                 # print(file.file_citation.file_id)
         except Exception as e:
             print(e)
         data = {
             "response": latest,
-            "attachments": json.dumps(files),
+            "attachments": json.dumps(file_uri),
         }
         return HttpResponse(
             json.dumps(data),
