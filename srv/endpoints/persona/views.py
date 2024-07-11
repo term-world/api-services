@@ -1,4 +1,5 @@
 import os
+import io
 import json
 
 from openai import OpenAI, AssistantEventHandler
@@ -117,26 +118,26 @@ class SyncPersonaGenerateView(APIView):
             limit = 1,
             order = "desc"
         )
-        print(response)
         latest = response.data[0].content[0].text.value
+        print(response)
         files = None
         try:
             files = response.data[0].content[0].text.annotations
             for file in files:
                 file_id = file.file_citation.file_id
-                print(dir(client.beta.assistants.retrieve))
-                fh = client.beta.assistants.retrieve(file_id)
-                print(fh)
-                source = fh.read()
-                print(source)
+                fh = client.beta.assistants.retrieve(
+                    getattr(assistant, 'assistant_id')
+                )
+                print(dir(fh))
                 # print(file.file_citation.file_id)
         except Exception as e:
             print(e)
         data = {
             "response": latest,
+            "attachments": json.dumps(files),
         }
         return HttpResponse(
-            latest,
+            json.dumps(data),
             status = 200
         )
 
@@ -154,18 +155,42 @@ class PersonaSearchView(APIView):
 class PersonaCreateView(APIView):
 
     def post(self, request, persona_name, *args, **kwargs):
+
+        vector_store = client.beta.vector_stores.create(name = "Inventory")
+
+        persona_file_name = request.data.get('persona_file_name')
+        persona_file = request.FILES['file_binary'].file
+
+        if persona_file_name:
+            persona_file.seek(0)
+            persona_file.name = persona_file_name
+            persona_binary = io.BufferedReader(persona_file)
+            batch_upload = client.beta.vector_stores.file_batches.upload_and_poll(
+                vector_store_id = vector_store.id, files = [persona_binary]
+            )
+
         persona_creator = request.data.get('persona_creator')
         persona_prompt = request.data.get('persona_prompt')
+
         assistant = client.beta.assistants.create(
             name = persona_name,
             instructions = persona_prompt,
-            model = "gpt-4o"
+            model = "gpt-4o",
+            tools = [{"type": "file_search"}],
+            tool_resources = {
+                "file_search": {
+                    "vector_store_ids": [vector_store.id]
+                }
+            }
         )
+
         id = assistant.id
         name = assistant.name
+
         persona, created = PersonaModel.objects.get_or_create(
             assistant_name = name
         )
+
         if not created:
             return HttpResponse(
                 json.dumps({"response": "Assistant with that name already exists!"}),
@@ -177,9 +202,11 @@ class PersonaCreateView(APIView):
             )
         except OmnipresenceModel.DoesNotExist:
             return HttpResponse(status = 400)
+
         setattr(persona, 'assistant_owner', creator)
         setattr(persona, 'assistant_id', id)
         persona.save()
+
         return HttpResponse(
             json.dumps({"response": "Assistant created!", "name": name, "id": id}),
             status = 200

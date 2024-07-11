@@ -35,16 +35,22 @@ class Ego:
             },
             stream=True
         )
-        response_text = content.text.strip()
+
+        response_text = content.json()["response"].strip()
+        attachments = content.json()["attachments"]
+        # TODO: Decide what to do with attachments?
         console.print(Markdown(response_text))
 
+        """ DEPRECATED
         # Check if the response contains a Python code snippet
         if "```python" in response_text and "```" in response_text:
             self.handle_python_code(response_text)
+        """
 
         if msg.lower() == "goodbye":
             sys.exit(0)
 
+    """ DEPRECATED
     def handle_python_code(self, response_text: str):
         start = response_text.find("```python") + len("```python")
         end = response_text.find("```", start)
@@ -65,6 +71,7 @@ class Ego:
             print(f"Your item is here: {full_path}")
         else:
             print("Filename not found in the response.")
+    """
 
     def behave(self):
         console = Console()

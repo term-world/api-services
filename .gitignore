@@ -332,4 +332,4 @@ cython_debug/
 *.swp
 
 # Nano SAVE files
-*.save
+*.save*
