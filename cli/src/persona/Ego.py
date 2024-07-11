@@ -1,6 +1,5 @@
 import os
 import sys
-import types
 import requests
 
 from rich.console import Console
@@ -11,7 +10,7 @@ load_dotenv()
 
 class Ego:
 
-    def __init__(self, type: str = "", name: str = "", mode = "talk"):
+    def __init__(self, type: str = "", name: str = "", mode="talk"):
         self.addressee = os.getenv('GITHUB_USER')
         self.archetype = type
         self.named = name or type
@@ -30,20 +29,49 @@ class Ego:
     def __send_message(self, console, msg: str = ""):
         content = requests.post(
             f"{os.getenv('API_URL')}:{os.getenv('API_PORT')}/v1/persona/generate/{self.archetype}",
-            data = {
+            data={
                 "charname": os.getenv('GITHUB_USER'),
                 "message": msg
             },
-            stream = True
+            stream=True
         )
-        # formatted = self.__fmt_blockquotes(content.text)
-        console.print(Markdown(content.text))
+
+        response_text = content.json()["response"].strip()
+        attachments = content.json()["attachments"]
+        # TODO: Decide what to do with attachments?
+        console.print(Markdown(response_text))
+
+        """ DEPRECATED
+        # Check if the response contains a Python code snippet
+        if "```python" in response_text and "```" in response_text:
+            self.handle_python_code(response_text)
+        """
+
         if msg.lower() == "goodbye":
             sys.exit(0)
 
-    def __fmt_blockquotes(self, text: str = ""):
-        paras = text.split("\n\n")
-        return ''.join(["\n> " + para for para in paras])
+    """ DEPRECATED
+    def handle_python_code(self, response_text: str):
+        start = response_text.find("```python") + len("```python")
+        end = response_text.find("```", start)
+        python_code = response_text[start:end].strip()
+        filename_end = response_text.find(".py") + 3
+        if filename_end != -1:
+            filename_start = filename_end
+            while filename_start > 0 and response_text[filename_start - 1] != " ":
+                filename_start -= 1
+            filename = response_text[filename_start:filename_end].strip()
+        else:
+            None
+
+        if filename:
+            with open(filename, "w") as file:
+                file.write(python_code)
+            full_path = os.path.abspath(filename)
+            print(f"Your item is here: {full_path}")
+        else:
+            print("Filename not found in the response.")
+    """
 
     def behave(self):
         console = Console()
